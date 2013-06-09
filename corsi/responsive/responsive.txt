@@ -1,0 +1,117 @@
+######### Giuda GiuB #########
+# Responsive & jQuery Mobile #
+
+## RESPONSIVE
+
+---- CAP 1 FONDAMENTI DEL MOBILE
+
+Per avere un font relativo bisogna convertire il font size da 'px' a -> 'ems'
+Nota: 1em = 10px
+
+Se non vogliamo utilizzare la notazione 'ems' ma '%' la formula è:
+Nota: px-standard : 100 = 10px(scala standard ms) : x
+Risultato per context <body> (px-standard = 16px): 16px : 100 = 10px : x
+Oppure: this-px / this-px-container = result
+
+Formula per un resposive font: font-pixel / standard-context ems = result
+Esempio: 20px / 10px = 2em
+
+Bisogna tener conto del contesto perchè ad esempio un link messo all'interno di un tag <h1> non ha un altezza predefinita di 10px ma di 30px.
+In questo caso la forumula risulta: 20px / 30px = 0.666666em
+
+*** Nota: Preferibilmente usa la notazione ems con massimo 6 decimali
+
+---- CAP 2 LAYOUT SCALATO
+
+Una corretta scala per un layout relativo per <body> è 90%
+Consiglio, è bene settare dei massimi per ciò che sta all'interno del sito, per questo è bene inserire dei valori variabili in 'em' o '%' inserendo a fianco un //commento riguardante la misura (se fissa)
+
+---- CAP 3 ADAPTIVE AND MEDIA QUERIES
+
+Per modificare gli stili del sito in maniera appropriata per device mobile con basse risoluzione come iphone ecc è opportuno utilizzare le media queries con i (max-width || min-width).
+
+E' bene raggruppare le media query nel fondo della pagina per "diminuire" i tempi di caricamento della stessa.
+
+Esempio:
+#media screen and (max-width: 320px) {
+	body {
+		font-size: 100%;
+	}
+
+
+//Il seguente codice posiziona il logo del sito al centro e la navigazione subito sotto
+Esempio:
+@media screen and (max-width: 320px) {
+  .logo {    
+    float: none;    
+    margin: 0 auto;
+    width: inherit;
+  }
+  nav {
+    float: none;  
+    width: inherit;
+    text-align: center;
+  }
+}
+
+//Mobile con orientamento verticale
+@media screen and (orientation:portrait) {
+  ...
+}
+
+//Mobile con orientamento orizzontale
+@media screen and (orientation:landscape) {
+  ...
+}
+
+---- CAP 4 RESPONSIVE ADVENTURE
+
+standard breakpoint
+//1024px
+//870px large pad
+//768px ipad
+//480px
+//320px
+
+---- CAP 5 RESPONSIVE IMAGES & RETINA IMAGES
+
+//Ottimizzare eventuali bug delle immagini:
+IMG { max-width: 100%; }
+img, embed, object, video { max-width: 100% }
+
+Questo trick non funziona su IE6, in tal caso si può utilizzare questo tool:
+http://clagnut.com/sandbox/imagetest3/
+
+Per fixare altri problemi alle immagini per OS precedenti a Windows 7
+http://msdn.microsoft.com/en-us/library/
+
+//Per correggere la densità di pixel causate da immagini retina
+@media
+only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio: 1.5) {
+ 	.logo {
+		background-image: url(logo@2x.png);
+		-webkit-background-size: 12px 16px;
+		background-size: 12px 16px;
+ 	}
+}
+
+//Quando le immagini retina sono più di una è meglio fare in modo che l'utente scarichi solo le immagini che si adattano al suo browser:
+
+Includere questa libreria: http://scottjehl.com/pictureﬁll/
+
+<picture alt="Our Alternate Text">
+	<!-- Smallest size first - no @media qualifier -->
+	<source src="content-image.jpeg" />
+	<!-- Large size - send to viewports 800px wide and up -->
+	<source src="content-image-lrg.jpeg" media="(min-width: 800px)" />
+</picture>
+<!-- Fallback content for non-JS or non-media-query- supporting-browsers -->
+<picture>	
+	<noscript>
+		<img src="content-image.jpeg" alt="Our Alternate Text" />
+	</noscript>
+</picture>
+
+
+

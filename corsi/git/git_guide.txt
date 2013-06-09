@@ -1,0 +1,339 @@
+##### GiuB Guide #####
+### How to use git ###
+
+---- CAP 1. BASE UPLOAD
+
+Prima di uppare un file è importante controllare le differenze tra i file locali e i file nel repository e fare le opportune modifiche.
+Successivamente mettere nell'are di stage (add) i file, fare il commit (per commentare l'azione).
+A questo punto si fa l'ultima sincronizzazione tra locale e repository (pull) e poi si uppa il tutto (push)
+
+0. git log (vedi tutti i commit dei contributori)
+1. git status (vedere file aggiunti o tolti tra repository e locale)
+2. git diff [oppure -> git diff --staged (staged: conteggia differenze compresi i file già addati)]
+3. git add <file> 
+4. git commit -m 'commento' (il commento prima dell'upload è obbligatorio e comprende tutti i file addati)
+5. git pull origin (sincronizza la master o, al posto di "origin", il branch interessato)
+6. git push origin (o al posto di "origin" il branch interessato)
+
+---- note CAP 1. 
+
+*** >_
+git rm <file>
+
+*** comm:
+Togliere un file (poi fare il commit come segue:
+>_ git commit -a -m "A file was deleted"
+
+*** >_
+git reset HEAD <file>
+
+*** comm:
+Serve per togliere un file che è stato addato alla stage area
+
+*** >_
+git reset --soft HEAD^
+
+*** comm:
+Ritorna al commit precedente mettendo tutte le modifiche nella stage area ('^' è ripetuto per ogni commit da retrocedere)
+
+*** >_
+git reset --hard HEAD^
+
+*** comm:
+Torna indietro al commit precedente e al suo stato dei file
+
+*** >_
+git checkout -- <file>
+
+*** comm:
+Per riportare il file all'ultimo commit fatto
+
+*** >_
+git commit -a -m "commento add + commit"
+
+*** comm:
+Shortcut per addare e commit nella stessa riga. Con il '-a' si fa l'add di TUTTI i file che presentano cambiamenti
+
+*** >_
+git add <file>
+git commit --amend -m "Commento che fare l'override del precedente commit"
+
+*** >_
+Usato per modificare l'ultimo commit
+
+
+---- CAP 2. BASE REPOSITORY
+
+### Working with repository
+
+1. git remote add <name> <address>
+2. git remote rm <name>
+3. git push -u origin master
+
+*** >_
+pbcopy < ~/.ssh/id_rsa.pub
+git clone https://... nome-folder
+git remote -v
+
+*** comm:
+Crea in locale la cartella 'nome-folder' che contiene il repository
+Punta il repository al clone URL
+
+---- CAP 3. BASE BRANCH
+
+### Working with branch
+
+1. git branch (vedere i branch locali)
+2. git branch -r (vedere i branch remoti) || git remote show origin
+3. git branch <nome>
+4. git checkout <nome_branch>
+5. git push origin:<nome_branch>
+
+#_ like 3. -> git checkout -b <nome_branch> [crea il branch e ci sposta lì]
+
+### Merge branch
+
+1. git checkout master
+2. git merge <nome_branch> [per aggiornare la master: git merge origin/master]
+
+*** >_
+git merge --abort || git reset --merge || git reset --hard
+
+*** comm:
+Per uscire da un merge
+
+*** >_
+git checkout master
+git checkout <nome_branch> -- <nome_file>
+git stash
+git stash pop
+
+*** comm:
+Sovrascrive il file della master con quello presente nel branch indicato e salva l'accaduto
+
+**
+*** comm:
+Quando fai il merge di un branch git apre un vi editor usato come file README per esplicazioni del merge
+
+VI COMMANDS:
+
+ESC -> esci modalità
+:wq -> salva ed esci [! IL PIU' USATO]
+i -> insert mode
+:q! cancella ed esci
+j -> giù || k -> su || h -> sinistra || l -> destra
+
+***
+**
+
+## Delete branch
+
+1. git branch -d <nome_branch> (delete local branch) if error -> -D
+2. git push origin :<nome_branch> (delete remote branch)
+3. git remote prune origin (per pulire i branch cancellati in remoto)
+
+## Rinominare un branch locale
+
+git branch -m <oldname> <newname>
+
+---- CAP 4. TAGGING
+
+1. git tag (vedi tutti i tag)
+2. git checkout <tag_name> (passa alla versione del tag selezionato)
+3. git tag -a <tag_name> -m 'commento al tag'
+4. git push -- tags
+
+---- CAP 5. FAST REBASE
+
+## - Con il comando rebase è possibile fare il download e merge di tutti i commit dal repository portando i nostri commit locali in "top" come + aggiornati rispetto a quelli scaricati.
+
+1. git checkout master
+2. git rebase
+3. git rebase --continue || git rebase --skip || git rebase --abort
+
+## Rebase della master tenendo il nostro branch pulito in "top"
+*** >_
+git checkout <branch>
+git rebase master
+
+---- CAP 5.1 INTERACTIVE REBASE
+
+## Con questo comando posso vedere la lista di commit locali che ho messo nella stage area e fare il merge dei miei commit locali o editarli ecc tramite lo script aperto dal rebase
+
+1. Esempio: git rebase -i HEAD~3
+
+Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+
+---- CAP 6. SPECIAL CONFIG
+
+## - Colorare commit hash
+*** >_ 
+git config --global color.ui true
+
+## Vedere le modifiche fatte dal git log
+*** >_ 
+git log --oneline -p
+
+## Vedere i log per data
+*** >_
+$ git log --until=1.minute.ago
+$ git log --since=1.day.ago 
+$ git log --since=1.hour.ago 
+$ git log --since=1.month.ago --until=2.weeks.ago
+$ git log --since=2000-01-01 --until=2012-12-21
+
+## Vedere i cambiamenti avvenuti dall'ultimo commit
+*** >_
+git diff HEAD || git diff git diff HEAD~5
+
+## Vedere i cambiamenti ad un file per Autore e Data
+*** >_
+git blame index.html --date short
+
+## Ignorare file dai commit
+sudo nano .git/info/exclude || sudo nano .gitignore
+Aggiungere alla lista il file da escludere e salvare
+
+## Per far ignorare i file anche ai contributors
+*** >_
+sudo nano .gitignore
+git commit -a -m 'Ignore other files'
+
+## Non avvisare se il file cambia (ad esempio i file di log)
+*** >_
+git rm --cached <file> 
+
+##### Comandi strani vari #####
+
+*** >_ git config --global core.editor emacs (Editor per comandi iterattivi)
+*** >_ git config --global merge.tool opendiff (Solo per OSX: miglior visuale col comando 'diff')
+
+##### Per forzare il pull a sovrascrivere il locale
+*** >_ git fetch --all
+       git reset --hard origin/master
+
+---- CAP 7. ALIAS
+
+## Alias = shortcut. Questo è per vedere un formato grafico dei cambiamenti dei log
+*** >_
+git config --global alias.mylog \
+"log --pretty=format:'%h %s [%an]' --graph"
+
+## Short famous lol Alias
+*** >_
+git config --global alias.lol \
+"log --graph --decorate --pretty=oneline --abbrev-commit --all --pretty=format:'%h %s [%an]'"
+
+## Custom GiuB log
+*** >_
+git config --global alias.glog \
+"log --graph --pretty=format:'%Cred[%an]%Cblue%d %s %Cgreen[%cr] <%Creset%h>' --abbrev-commit --branches"
+
+--- CAP 8. STASHING
+
+## Ad esempio quando si mettono online modifiche errate ed è necessario mettere subito online i commit precedenti è importante salvare gli ultimi commit errati nella stashing area.
+
+## In questo esempio un mio collega ha messo online la master errata. Salvo i progressi del mio branch nella stashing area e scarico le errate modifiche del collega
+0. git checkout <branch>
+1. git stash save
+2. git checkout master
+3. git pull //Scarico la master arrata e successivamente la correggo
+
+Comandi:
+git stash list        				## Mostra la lista degli stash salvati stash@{0} è il + recente
+git stash apply stash@{1}		## Apllica lo stash salvato, se si vuole applicare lo stash 0 lascia vuoto
+git stash drop					## Libera lo stash (non lo cancella)
+git stash pop 					## Applica l'ultimo stash e lo cancella dalla stash list
+
+*** >_ Se git stash apply da errori significa che è necessario fare un git reset --hard HEAD
+
+*** >_ Se git stash pop da errori nel merge significa che ha fatto il merge ma per sicurezza non ha cancellato lo stash, serve dunque cancellarlo dalla stash list -> git stash drop
+
+--- Comandi usuali di Stashing:
+git stash save "First stash"			## Per salvare uno stash con un commento
+git stash save --keep-index 			## Per salvare le modifiche unstaged nella stashing area
+git stash save --include-untracked		## Salvare in stash i file intracked (non in git add)
+git stash list --stat 					## Vedere le modifiche della stash list
+git stash show stash@{0}				## Vedere i file che sono stati modificati 
+git stash show --patch					## Vedere i cambiamenti di ogni file di uno stash
+git stash branch <branch> stash@{0}		## Crea branch e fa il pop di un branch salvato in stashing
+git stash clear							## Pulire la stashing list
+
+--- CAP 9. PURGING HISTORY
+
+## E' un'operazione delicata e di responsabilità, da usare per esempio per i backup
+## Oppure quando si fa il push di una modifica decisamente errata e compromettente
+
+1. git clone <branch> <branch>-filter  //Fatto il backup dell'intero repository in /<branch>-filter
+2. cd <branch>-filter
+3. git filter-branch -f --tree-filter 'rm -f passwords.txt' -- --all 	
+## Toglie le pass in tutti i branch e se questo non è presente non da errore
+4. git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch passwords.txt'
+## Toglie le pass dalle arre di staging (index filter è + veloce del tree)
+5. git filter-branch -f --prune-empty -- --all 	## Cancella tutti i commit vuoti
+
+--- CAP 10. WORKING TOGETHER
+
+## I caratteri separatori, ad esempio \n posso risultare diversi nei vari sistemi, modificando i file di ## configurazione di git possiamo eliminare le differenze tra i vari OS
+
+git config --global core.autocrlf input				## Da usare su OSX - Linux
+git config --global core.autocrlf true				## Da usare su Windows
+
+## In caso di problemi di visualizzazione nei pull modificare il file .gitattribute prendendo come spunto queste proprietà:
+
+text=auto
+text eol=crlf 		// <- Windows
+text eol=lf			// <- Linux kernel
+
+--- Comandi cherry-pick (copiare singoli commit a branch differenti)
+git cherry-pick <#sha>						## Vedi #sha con git log --oneline
+git cherry-pick --edit <#sha>				## Per modificare il messaggio di commit al cherry pick
+git cherry-pick --no-commit <#sha> <#sha>	## Per fare un merge di 2 commit nella master
+git cherry-pick -x <#sha>					## Per farlo velocomente con commit = provenienza
+git cherry-pick --signoff <#sha>			## Aggiungere chi ha fatto quel cherry-pick
+
+--- CAP 10. SUBMODULES
+
+## Gli aggiornamenti di librerie nel nostro repository sono poco friendly perchè tutti devono 
+## manualmente aggiornare le richieste controllandole. Per evitare questo usare i submodels.
+## Nel caso di errori si faccia attenzione che di norma i submodules non si trovano in alcun branch
+
+1. git submodule add git@example.com:<cartella_modulo>.git
+2. git commit -a -m "Nuovo modulo"
+3. git push
+
+## Per scaricare i submodels dal repository
+*** >_ git submodule init
+*** >_ git submodule update
+
+## Per fare il coomit di un submodules (vedi punto successivo per velocizzare)
+*** >_ git merge <#sha>
+*** >_ git commit -a -m "Aggiornato submodel"
+*** >_ git push --recurse-submodules=check ## Meglio usare l'on-demand
+
+## Meglio creare un alias per pushare tutto il necessario
+*** >_ git config alias.pushall "push --recurse-submodules=on-demand"
+*** >_ git pushall
+
+## Per comodità mettere tutti i sottomodelli in un branch temp_changes
+*** >_ git branch temp_changes a7eded4
+
+--- CAP 10. REFLOG
+
+## Se facciamo erroneamente un reset --hard possiamo utilizzare il reflog per vedere i commit presenti ## prima del reset così da poter tornare allo stato precedente al reset
+## Nota che il reflog esiste solo localmente
+
+## Vedere i reflog
+*** >_ git reflog || oppure || git log --walk-reflogs (+ dettagliato)
+
+## Resettare il giusto al commit giusto tramite l'equivalente #sha
+*** >_ git reset --hard <#sha> || oppure || git reset --hard HEAD@{1}
+
+## Per recuperare un branch deletato
+*** >_ git branch <branch> <#sha>

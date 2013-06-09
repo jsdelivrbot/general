@@ -1,0 +1,321 @@
+######### GiuB Guide ##########
+### How to use coffeescript ###
+
+----- CAP 1 Basics of Coffe script
+
+E' un linguaggio di scrittura semplificato del javascript standard, è dunque da installare nel client del programmatore e si debugga dopo la compilazione del sorgente a in javascript.
+
+Esiste un plugin per Sublime text e TextMate
+
+No declaretions and no semiloumns "{ ;"
+
+Interpolazione delle stringhe, es:"Hello #{name}"
+
+Es:
+coffee = (message = "Ready for some Coffee?") ->
+	answer = confirm message
+	"Your answer is #{answer}"
+
+*** >_ INSTALLAZIONE LATO CLIENT
+
+1. install Node.js 	[http://nodejs.org]
+2. install npm 		[http://npmjs.org]
+3. $ npm install -g coffee-script
+4. coofee -h (help)
+
+*** >_ CREARE UN FILE COFEE
+$ coffee -c test.coffee (creerà un file test.js quando compilato)
+
+*** >_ AUTO COMPILAZIONE DEL COFFE AD OGNI MODIFICA
+$ coffee -cw test.coffee
+
+*** >_ COMPILA OGNI FILE COFFEE ALL'INTERNO DI UNA DIRECTORY
+$ coffee -c src -o js (es: cartella js/)
+
+*** >_ AUTO COMPILA OGNI FILE COFFEE PRESENTI IN UNA DIRECTORY AD OGNI MODIFICA
+$ coffee -wc src -o js
+
+----- CAP 2 COFFEE SCRIPT & JQUERY
+
+Esempio jQyery:
+
+jQuery(function($) {
+	function changeTab(e) {
+		e.preventDefault();
+		$("#tabs li a.active").removeClass("active");
+		$(this).addClass("active");
+	}
+	$("#tabs ul li a").click(changeTab);
+});
+
+Risposta Coffee:
+$ ->
+	changeTab = (e) ->
+		e.preventDefault()
+		$("#tabs li a.active").removeClass "active"
+		
+	$("#tabs ul li a").click changeTab
+
+
+$('#newCoffee a').click ->
+   name = prompt 'Name of coffee:'
+   coffee = $("<li>#{name}</li>")
+   $('ul.drink').append coffee
+
+----- CAP 3 CONDITIONAL AND OPERATORS
+ 
+Esempio Javascript 1:
+
+if (age < 18) {
+	alert('Under age');
+} 
+else {
+	alert('of age');
+}
+
+Risposta Coffee 1:
+
+if age < 18 then alert 'Under age' else alert 'of age'
+
+Esempio Javascript 2:
+
+if (age < 18) {
+	alert('Under age');
+}
+
+Risposta Coffee 2:
+
+alert 'Under age' if age < 18
+
+#### OPERATORI LOGICI ####
+
+== is
+isnt
+not
+and
+or
+true yes on
+false no off
+
+Esempio Coffee: if paid() and coffee() is on then pour()
+
+Esempio Coffee uguale 1: addCaffeine() if not Decaf()
+Esempio Coffee uguale 1: addCaffeine() unless Decaf()
+
+Esempio Switch in javascript 3:
+
+var message = (function() {
+	switch (cupsOfCoffee) {
+		case 0:
+		return 'Asleep';
+		case 1:
+		return 'Eyes Open';
+		case 2:
+		return 'Buzzed';
+		default:
+		return 'Dangerous';
+	}
+})();
+
+Esempio Switch in Coffee:
+
+message = switch cupsOfCoffee
+	when 0 then 'Asleep'
+	when 1 then 'Eyes Open'
+	when 2 then 'Buzzed'
+	else 'Dangerous
+
+Esempio javascript 4:
+
+if (typeof cupsOfCoffee !== "undefined" && cupsOfCoffee !== null) {
+	alert('it exists!');
+}
+
+Esempio Coffee 4:
+
+if cupsOfCoffee?
+ alert 'it exists!'
+
+Esempio javascript 5:
+
+Esempio Coffee 5:
+
+if (2 < newLevel && newLevel < 5) {
+	alert("In Range!");
+}
+
+if 2 < newLevel < 5
+ alert "In Range!"
+
+Esempio Coffee uguale .2:
+if not cupsOfCoffee?
+	cupsOfCoffee = 0
+
+Esempio Coffee uguale .2:
+cupsOfCoffee = 0 unless cupsOfCoffee?
+
+Esempio Coffee uguale .2:
+cupsOfCoffee ?= 0
+
+//Chiama la funzione brew() se coffeePot esiste
+Esempio Coffee uguale .3:
+if coffeePot?
+	coffeePot.brew()
+
+Esempio Coffee uguale .3:
+coffeePot?.brew()
+
+//Equivalente del Try statement esteso anche per la chiamata di funzioni per coffee
+funzione?()
+
+----- CAP 4 ARRAY, OGGETTI E INTERAZIONI
+
+//Popolare un array
+start = 5
+end = 10
+range = [start..end]
+
+*** Com: Con i 3 punti si esclude la creazione dell'elemento finale 
+*** Es: range = [1...4] 
+*** Risultato: [1, 2, 3]
+
+^ --> [5, 6, 7, 8, 9, 10]
+
+//Dallo stesso array estrarre il contenuto ma non gli estremi
+range[1..4]
+
+^ --> [6, 7, 8, 9]
+
+//Dallo stesso array 2 modi per estrarre da 6 a 10
+es: range[1...range.length]
+es: range[1..-1]
+
+//Creare un array
+storeLocations = [
+	'Orlando'
+	'Winter Park'
+	'Sanford'
+]
+
+Esempio foreach javascript:
+
+storeLocations.forEach(function(location, index) {
+	return alert("Location: " + location);
+});
+
+Esempio for Coffee: 
+
+for location in storeLocations
+ alert "Location: #{location}"
+
+|| Oppure ||
+
+alert "Location: #{location}" for location in storeLocations
+
+//Per sovrascrivere un array complesso dopo un foreach
+storeLocations = ("#{loc}, FL" for loc in storeLocations)
+
+|| Oppure, esempio più complesso per il foreach ||
+
+//Esegue la geolocalizzazione per ogni elemento di storeLocations se != 'Stanford'
+geoLocate(loc) for loc in storeLocations when loc isnt 'Sanford'
+
+//Creare e popolare un array;
+//Esempio uguale .4
+newLocs = []
+for loc in storeLocations 
+ newLocs.push loc if loc isnt 'Sanford'
+
+//Esempio uguale .4
+newLocs = (loc for loc in storeLocations when loc isnt 'Sanford')
+
+//Creazione degli oggetti 
+//Esempio uguale .5
+coffee = { name: 'French', strength: 1 }
+
+//Esempio uguale .5
+coffee =
+	name: 'French'
+	strength: 1
+
+//Esempio oggetto complesso
+coffees =
+	french:
+		strength: 1
+		in_stock: 20
+	italian:
+		strength: 2
+		in_stock: 12
+	decaf:
+		strength: 0
+		in_stock: 8
+
+//Richiamare un variabile definita in un oggetto (@)
+coffee =
+	name: 'French'
+	strength: 1
+	brew: -> alert("brewing #{@name}")
+
+//Iterare gli oggetti (key -> value) in un foreach (usare 'of' al posto di 'in')
+"#{coffee} has #{attrs.in_stock}" for coffee, attrs of coffees
+
+//Mostrare il merge degli elementi di un array coffees se in_stock > 0 
+to_print = for coffee, attrs of coffees when attrs.in_stock > 0
+	"#{coffee} has #{attrs.in_stock}"
+to_print.join ", "
+
+//Per accettare un array come parametro di una funzione (vedi suggest usa '...')
+displayTopPicks = (bestCoffee, suggested...) ->
+  alert('Top #1 ' + bestCoffee)
+  alert('Suggested: ' + suggested.join(","))
+
+---- CAP 5 APPLIFIED JQUERY II
+
+Esempio javascript:
+
+var filteredFlights = [];
+$.each(currentFlights, function(index, flight) {
+	if (stops == '2+' || flight.routing == 0) {
+	 filteredFlights.push(flight);
+	}
+});
+
+Esempio Coffee:
+
+filteredFlights =
+	(flight for flight in currentFlights when stops is '2+' or flight.routing is 0)
+
+----- CAP 6 OBJECT ORIENTATION
+
+Esempio Coffee1:
+
+//Classe Coffee con costruttore e sovrascrive il metodo brew da MaxgoodHouse
+class Coffee
+	constructor: (@name, @strength=1) ->
+	brew: -> alert "brewing #{@name}"
+
+class MaxgoodHouse extends Coffee
+	constructor: (@name, @strength=0) ->
+		@brand = "Maxgood House"
+	boring = new MaxgoodHouse("Boring")
+
+boring = new MaxgoodHouse("Boring")
+boring.brew()
+
+//Per bindare correttamente gli eventi di una classe
+class Coffee
+	constructor: (@name, @strength=1, @inventory=0) ->
+	pourClick: ->
+		if @inventory isnt 0
+		@inventory -= 1
+		alert "Poured a cup of #{@name}"
+
+//Per accedere ad una variabile argomento del costruttore da una funzione sotto un metodo usare '=>'
+class Coffee
+	constructor: (@name, @strength=1, @inventory=0) ->
+	pourClick: ->
+		$("#pour-#{@name}").click (event) =>
+		if @inventory isnt 0
+			@inventory -= 1
+			alert "Poured a cup of #{@name}
+
