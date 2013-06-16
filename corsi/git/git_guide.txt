@@ -79,6 +79,13 @@ git remote -v
 Crea in locale la cartella 'nome-folder' che contiene il repository
 Punta il repository al clone URL
 
+*** >_
+git remote set-url origin git@github.com:username/repo.git
+
+*** comm:
+Se ad ogni git push bisogna autenticarsi pur avendo settato l'SSH key refreshare l'url del repository non in HTTPS ma in SSH
+
+
 ---- CAP 3. BASE BRANCH
 
 ### Working with branch
