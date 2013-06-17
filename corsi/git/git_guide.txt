@@ -71,13 +71,13 @@ Usato per modificare l'ultimo commit
 3. git push -u origin master
 
 *** >_
-pbcopy < ~/.ssh/id_rsa.pub
-git clone https://... nome-folder
+pbcopy < ~/.ssh/id_rsa.pub							 ## <- Linux ## 
+git clone git@github.com:username/repo.git
 git remote -v
 
 *** comm:
 Crea in locale la cartella 'nome-folder' che contiene il repository
-Punta il repository al clone URL
+Punta il repository al clone URL 
 
 *** >_
 git remote set-url origin git@github.com:username/repo.git
@@ -291,6 +291,7 @@ git stash clear							## Pulire la stashing list
 
 git config --global core.autocrlf input				## Da usare su OSX - Linux
 git config --global core.autocrlf true				## Da usare su Windows
+git config core.autocrlf false						## Da usare su Windows se per disabilitare gli alert se repository startato normal Linux
 
 ## In caso di problemi di visualizzazione nei pull modificare il file .gitattribute prendendo come spunto queste proprietà:
 
