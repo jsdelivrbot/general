@@ -24,6 +24,12 @@ git rm <file>
 Togliere un file (poi fare il commit come segue:
 >_ git commit -a -m "A file was deleted"
 
+*** >_ Spostare il contenuto di una cartella [directory]
+git mv <folder> <location>
+git clean -fd <folder>
+git add -a -m "Move folder"
+git push
+
 *** >_
 git reset HEAD <file>
 
