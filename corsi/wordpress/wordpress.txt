@@ -1,0 +1,199 @@
+#### CORSO WORDPRESS ####
+## TEACHER JEFFREY WAY ##
+##### TUTSPLUS.COM ######
+
+### Per creare un Plugin ###
+1) Posizionarsi su : wp-content/plugin e creare una cartella col nome del proprio plugin
+2) Iniziare con delle righe commentate relative a info sul plugin: 
+
+/*
+Plugin Name: JW Filter		
+Plugin URI: giub.it			//URL Documentazione
+Description: demo plugin twitter
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+## Plugin Esempio:
+
+/** 1
+  * - 
+  * Scrivere un pluging Wordpress che invii una mail
+  * all'admin ogni volta che viene postato un commento
+  * (già presente di default su wordpress)
+  **/
+
+add_action('comment_post', function() {
+	$email = get_bloginfo('admin_email');
+	wp_mail(
+		$email,
+		'Nuovo commento',
+		"E' stato postato un nuovo commento sul tuo sito" 
+	);
+});
+
+/** 2
+  * - 
+  * Scrivere un pluging Wordpress che mostri prima del
+  * post una lista di post collegati alla categoria
+  **/
+
+add_filter('the_content', function($content) {
+	$id = get_the_id();
+	if(!is_singular('post')) {	//Se è una pagina di categoria o altro
+		return $content;
+	}
+
+	$terms = get_the_terms($id, 'category');
+	$cats = array();
+
+	foreach($terms as $term) { //Salvo le categorie a cui è correlato il post
+		$cats[] = $term->car_ID;
+	}
+
+	//Filtro per i prossimi 3 post delle categorie correlate
+	$loop = new WP_Query(
+		array(
+			'posts_per_page' => 3,
+			'category__in' => $cats,
+			'order_by' => 'rand',
+			'post__not_in' => array($id)
+		);
+	);
+
+	//Aggiungo al testo un link agli articoli correlati
+	if($loop->have_posts()) {
+		$content .= '
+			<h2>Postresti essere interessato anche a:</h2>
+			<ul class="related-category-posts">';
+
+		while($loop->have_posts()) {
+			$loop->the_post();
+
+			$conent .= '
+				<li>
+					<a href="'.get_permalink().'">'.$get_the_title().'</a>
+				</li>';
+		}
+
+		$content .= '</ul>';
+		wp_reset_query();
+	}
+	return $content;
+});
+
+
+/** 3
+  * - 
+  * Scrivere un pluging Wordpress che sovrascriva il 
+  * "[twitter]" scritto nei post linkando al relativo
+  * autore
+  **/
+
+//Primo parametro: [nome_shortcode]
+//Secondo parametro: $atts contiene un array di attributi dello shortcode twitter
+//Terzo parametro: $content è il contenuto che si trova tra [twitter]...[twitter]
+//Shortcode esempio: [twitter username="giub"] Seguimi su Twittwer! [/twitter]
+//Serve un return, con echo stampa sempre a inizio post
+
+add_shortcode('twitter', function($atts, $content) {
+
+	//Funzione per sovrascrivere gli attributi dello shortcode non settati
+	$atts = shortcode_atts(	
+		array(
+			'username' => 'giub',
+			'content'  => !empty($content)? $content : 'Seguimi su Twittwer'
+		), $atts
+	);
+
+	//Funzione che trasforma gli indici dell'array in singole variabili
+	extract($atts);
+
+	return "<a href='http://twitter.com/$username'>$content</a>";
+});
+
+
+/** 4
+  * - 
+  * Basandoci sull'esempio precedente:
+  * Scrivere un twitter shortcode che cashi gli ultimi 5 tweet
+  * all'account a cui linka
+  **/
+
+add_shortcode('twitter', function($atts, $content) {
+
+	$atts = shortcode_atts(	
+		array(
+			'username' 			=> 'giub',
+			'content'  			=> !empty($content)? $content : 'Seguimi su Twittwer',
+			'show_tweets' 		=> false,
+			'tweet_reset_time' 	=> 10,
+			'num_tweets' 		=> 5
+		), $atts
+	);	
+	extract($atts);
+
+	if($show_tweets) {
+		$tweets = fetch_tweets($num_tweets, $username, $tweet_reset_time);
+	}
+
+	return "$tweets
+			<p><a href='http://twitter.com/$username'>$content</a></p>";
+	
+});
+
+function fetch_tweets($num_tweets, $username, $tweet_reset_time) {
+	global $id;
+	$recent_tweets = get_post_meta($id, 'jw_recent_tweets');
+	reset_data($recent_tweets, $tweet_reset_time);
+
+	//Se non ci sono tweet recenti cachati
+	if(empty($recent_tweets)) {
+		$tweets = curl("http://twitter.com/statuses/user_timeline/$username.json");
+
+		$data = array();
+		foreach($tweets as $tweet) {
+			if($num_tweets-- === 0) brek;
+			$data[] = $tweet->text;
+		}
+
+		$recent_tweets = array((int)date('i', time()));
+		$recent_tweets[] = '<ul class="jw_tweets"><li>'.implode('</li><li>', $data).'</li></ul>';
+		cache($recent_tweets);
+		return ((isset($recent_tweets[0][1])? $recent_tweets[0][1] : $recent_tweets[1]);
+	}	
+}
+
+function curl($url) {
+	$c = curl_init($url);
+	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 3);
+	curl_setopt($c, CURLOPT_TIMEOUT, 5);
+
+	return json_decode(curl_exex($c));
+}
+
+function cache($recent_tweets) {
+	// [0] = current minute
+	// [1] = tweet html
+	global $id;
+
+	//Aggiunge al post (solo una volta -> ultimo parametro "true") 
+	//una variabile custom che indica con i tweet (cashati) 
+	add_post_meta($id, 'jw_recent_tweets', $recent_tweets, true);
+}
+
+//Se la cache è troppo vecchia la resetta
+function reset_data($recent_tweets, $tweet_reset_time) {
+	global $id;
+
+	//Se è settata una data nei tweet cachati
+	if(isset($recent_tweets[0][0])) {
+		$delay = $recent_tweets[0][0] + (int)$tweet_reset_time;
+		if($delay >= 60) $delay -= 60;
+		if($delay <=  (int)date('i', time())) {
+			delete_post_meta($id, 'jw_recent_tweets');
+		}
+	}
+}
