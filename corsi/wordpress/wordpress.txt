@@ -425,9 +425,27 @@ Author URI: giub.it
 Version: 1.0
 */
 
-if(!wp_next_scheduled('jw_cron_hook') {
-	wp_schedule_event(time(), 'hourly', 'jw_cron_hook');	
-}
+add_action('init', function() {
 
+	$time = wp_next_scheduled('jw_cron_hook');
+	wp_unschedule_event($time, 'jw_cron_hook');
+
+	if(!wp_next_scheduled('jw_cron_hook') {
+		wp_schedule_event(time(), 'two-minutes', 'jw_cron_hook');
+	}	
+});
+
+add_action('jw_cron_hook', function() {
+	$str = time();
+	wp_mail('web@giub.it', 'Scheduled with WP Cron!', "This email was sent at $str.");
+});
+
+add_filter('cron_schedules', function($schedules) {
+	$schedules['two-minutes'] = array (
+		'interval'	=> 120,
+		'display'	=> 'Evry two minutes'
+	);
+	return $schedules;
+});
 
 
