@@ -21,7 +21,7 @@ Version: 1.0
   * - 
   * Scrivere un pluging Wordpress che invii una mail
   * all'admin ogni volta che viene postato un commento
-  * (già presente di default su wordpress)
+  * (già presente di defa<div></div>ult su wordpress)
   **/
 
 add_action('comment_post', function() {
@@ -197,3 +197,237 @@ function reset_data($recent_tweets, $tweet_reset_time) {
 		}
 	}
 }
+
+
+/** 5
+  * - 
+  * Scrivere un semplice widget con title e descrizione settabile
+  **/
+
+error_reporting(E_ALL);
+/*
+Plugin Name: Messager Widget		
+Plugin URI: giub.it			//URL Documentazione
+Description: Display any message designated
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+class Messager extend WP_Widget {
+
+	//Descrizione della barra del widget nell'area amministrativa
+	function __contruct() {
+		$params = array(
+			'description' => 'Display messages to readers',
+			'name'		  => 'Messager'
+		);
+
+		parent:: __construct('Messager', '', $params);
+	}
+
+	//La form del widget che si ha quando questo è attivo
+	public function form($instance) {
+		extract($instance);
+		?>
+		<p>
+			<label for="<?php echo $this->get_field_name('title'); ?>">
+				Title:</label>
+			<input class="widefat" 
+				id="<?php echo $this->get_field_name('title'); ?>"
+				name="<?php echo $this->get_field_name('title'); ?>"
+				value="<?php if(isset($title)) echo esc_attr($title); ?>" />
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_name('description'); ?>">
+				Description:</label>
+			<textarea class="widefat" rows="10"
+				id="<?php echo $this->get_field_name('description'); ?>"
+				name="<?php echo $this->get_field_name('description'); ?>"><?php if(isset($description)) echo esc_attr($description); ?>
+				</textarea>
+		</p>
+		<?php
+	}
+
+	//Parte grafica nel frontend
+	public function widget($args, $instance) {
+		extract($args);
+		extract($instance);
+
+		$title = apply_filters('widget_title', $title);
+		$description = apply_filters('widfet_description', $description);
+
+		if(empty($title)) $title = 'Cosa sto pensando';
+
+		echo $before_widget;
+			echo $before_title . $title . $after_title;
+			echo '<p>'.$description.'<p>';
+		echo $after_widget;
+	}
+}
+
+add_action('widgets_init', 'jw_register_messanger');
+function jw_register_messanger() {
+	register_widget('Messager');
+}
+
+
+/** 6
+  * - 
+  * Basandoci sul plugin precedente creare un widget per twitter
+  **/
+
+/*
+Plugin Name: JW_Twitter_Widget		
+Plugin URI: giub.it			//URL Documentazione
+Description: Display any message designated
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+class JW_Twitter_Widget extend WP_Widget {
+
+	//Descrizione della barra del widget nell'area amministrativa
+	function __contruct() {
+		$options = array(
+			'description' => 'Display and cache tweets',
+			'name'		  => 'Display Tweets'
+		);
+
+		parent:: __construct('JW_Twitter_Widget', '', $options);
+	}
+
+	//La form del widget che si ha quando questo è attivo
+	public function form($instance) {
+		extract($instance);
+		$t_id = $this->get_field_id('title');
+		$usr_id = $this->get_field_id('username');
+		$twn_id = $this->get_field_id('tweet_count');
+
+		?>
+		<!-- Title Field -->
+		<p>
+			<label for="<?=$t_id ?>">Title:</label>
+			<input type="text" class="widefat"
+			id="<?=$t_id ?>" name="<?=$t_id ?>"
+			value="<?php if(isset($title)) echo esc_attr($title); ?>" />
+ 		</p>
+
+ 		<!-- Username Field -->
+ 		<p>
+			<label for="<?=$usr_id ?>">Username:</label>
+			<input type="text" class="widefat"
+			id="<?=$usr_id ?>" name="<?=$usr_id ?>"
+			value="<?php if(isset($username)) echo esc_attr($username); ?>" />
+ 		</p>
+
+ 		<!-- Tweets Number Field -->
+ 		<p>
+			<label for="<?=$twn_id ?>">
+				Number of Tweets:
+			</label>
+
+			<input type="number" class="widefat"
+			style="width: 40px;" min="1" max="10"
+			id="<?=$twn_id ?>" name="<?=$twn_id ?>"
+			value="<?php !empty($tweet_count)? $tweet_count : 5 ?>" />
+ 		</p>
+
+		<?php
+	}
+
+	//Parte grafica nel frontend
+	public function widget($args, $instance) {
+		extract($args);
+		extract($instance);
+
+		if(empty($title)) $title = 'Recent Tweet';
+
+		$data = $this->twitter($tweet_count, $username);
+
+		if($data !== false && isset($data->tweets)) {
+			echo $before_widget;
+				echo $before_title;
+					echo $title;
+				echo $after_title;
+
+				echo '<ul><li>'.implode('</li><li>', $data->tweets).'</li></ul>'
+			echo $after:widget;
+		}
+	}
+
+	private function twitter($tweet_count, $username) {
+		if(empty($username)) return false;
+
+		//Prendo i dati caschati nel DB se posso
+		$tweets = get_transient('recent_tweets_widget');
+
+		if(!$tweets ||
+			$tweets->username !== $username ||
+			$tweets->tweet_count !== $tweet_count) {
+			fetch_tweets($tweet_count, $username);
+		}
+
+		return $tweets;
+	}
+
+	private function fetch_tweets($tweet_count, $username) {
+		$tweets = wp_remote_get("http://twitter.com/statuses/user_timeline/$username.json");
+		$tweets = json_decode($tweets['body']);
+
+		if(isset($tweets->error)) return false;
+
+		//Preparo i dati in una classe vuota
+		$data = new stdClass();
+		$data->username = $username;
+		$data->tweet_count = $tweet_count;
+		$data->tweets = array();
+
+		foreach($tweets as $tweet) {
+			if($tweet_count-- === 0) break;
+			$data->tweet[] = $this->filter_tweet($tweet->text);
+		}
+
+		//Casho la classe nel DB
+		set_transient('recent_tweets_widget', $data, 60*5);
+	}
+
+	private function filter_tweet($tweet) {
+		//Correggo i link
+		$tweet = preg_replace('/(http[^\s]+)/im', '<a rel="nofollow" href="$1">$1</a>', $tweet);
+	
+		//Miglioro l'username
+		$tweet = preg_replace('/@([^\s]+)/i', '<a href="http://twitter.com/$1" rel="nofollow">$1</a>', $tweet);
+		return $tweet;
+	}
+}
+
+add_action('widgets_init', 'register_jw_twitter_widget');
+function register_jw_twitter_widget() {
+	register_widget('JW_Twitter_Widget');
+}
+
+/** 6
+  * - 
+  * Creare un cron job con Wordpress (tiene il tempo ma 
+  * qualcuno deve guardare il sito per lanciare il cronjob se 
+  * necessario)
+  **/
+
+/*
+Plugin Name: JW Cron	
+Plugin URI: giub.it			//URL Documentazione
+Description: Demo WP CronJob
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+if(!wp_next_scheduled('jw_cron_hook') {
+	wp_schedule_event(time(), 'hourly', 'jw_cron_hook');	
+}
+
+
+
