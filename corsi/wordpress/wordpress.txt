@@ -409,11 +409,10 @@ function register_jw_twitter_widget() {
 	register_widget('JW_Twitter_Widget');
 }
 
-/** 6
+/** 7
   * - 
-  * Creare un cron job con Wordpress (tiene il tempo ma 
-  * qualcuno deve guardare il sito per lanciare il cronjob se 
-  * necessario)
+  * Creare un cron job con Wordpress + mini area amministrativa
+  * che mostra i cronjob in esecuzione
   **/
 
 /*
@@ -432,7 +431,27 @@ add_action('init', function() {
 
 	if(!wp_next_scheduled('jw_cron_hook') {
 		wp_schedule_event(time(), 'two-minutes', 'jw_cron_hook');
+		//Non ho capito bene a cosa serve
+		//wp_schedule_single_eventi(time() + 3600, 'jw_cron_hook');
 	}	
+});
+
+//Area amministrativa
+add_action('admin_menu', function() {
+	add_options_page('Cron Settings', 'Cron Settings', 'manage settings', 'jw-cron', function() {
+		$cron = get_cron_array();
+		$schedules = wp_get_schedules();
+		?>
+		<div class="wrap">
+			<h2>Cron Events Scheduled</h2>
+			<?php
+				foreach($schedules as $name) {
+					echo "<h3>". $name['display'] . ': ' . $name['interval'] . "</h3>";
+				}
+			?>
+		</div>
+		<?php
+	});
 });
 
 add_action('jw_cron_hook', function() {
@@ -445,7 +464,112 @@ add_filter('cron_schedules', function($schedules) {
 		'interval'	=> 120,
 		'display'	=> 'Evry two minutes'
 	);
+
+	$schedules['ten-miuìnutes'] = array(
+		'interval'  => 600,
+		'display'	=> 'Every Ten Minutes'
+	);
+
 	return $schedules;
 });
 
+/** 7
+  * - 
+  * Creare una pagina ammistrativa per customizzare il tema
+  **/
 
+/*
+Plugin Name: JW Options	
+Plugin URI: giub.it			//URL Documentazione
+Description: Demo WP Options
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+//NOTA: http://.../wp-admin/options.php contiene un array con tutte le opzioni del nostro sito wordpress
+
+class JW_Options {
+	ublic $options;
+
+	public function __construct() {
+		$this->register_settings_and_fields();
+		$options = get_option('jw_plugin_options');
+	}
+
+	public function add_menu_page() {
+		add_options_page('Theme Options', 'Theme Options', 'administrator', __FILE__, array(JW_Options, 'display_options_page'));
+	}
+
+	public function display_options_page() {
+		?>
+		<div class="wrap">
+			<?php screen_icon(); ?>
+			<h2>My Theme Options</h2>
+			<form method="post" action="options.php" enctype="multipart/form-data">
+				<?php settings_fields('jw_plugin_options'); ?>
+				<?php do_settings_sections(__FILE__); ?>
+				<p class="submit">
+					<input name="submit" type="submit" class="button-primary" value="Save Changes" />
+				</p>
+			</form> 
+		</div>
+		<?php
+	}
+
+	public function register_register_and_fields() {
+		//1° parametro custom come si vuole
+		register_setting('jw_plugin_options', 'jw_plugin_options', $array($this, 'jw_validate_settings')); //3rd param = optional cb
+
+		add_setting_section('jw_main_section', 'Main Settings', array($this, 'jw_main_section_cb'), __FILE__); //id, title, cb, witch page
+
+		//Banner Field
+		add_settings_field('jw_banner_heading', 'Baner Heading',  array($this, 'jw_banner_heading_setting'), __FILE__, 'jw_main_section');
+
+		add_settings_field('jw_logo', 'Your Logo',  array($this, 'jw_logo_setting'), __FILE__, 'jw_main_section');
+
+	}
+
+	public function jw_main_section_cb() {
+		// optional
+	}
+
+	public function jw_validate_settings($plugin_options) {
+
+		//Is the file an image?
+		if(!empty($_FILES['jw_logo_upload']['tmp_name'])) {
+			$override = array('test_form' => false);
+			$file = wp_handle_upload($_FILES['jw_logo_upload'], $override);
+			$plugin_options['jw_logo'] = $file['url'];
+		} else {
+			$plugin_options['jw_logo'] = $this->options['jw_logo'];
+		}
+
+		return $plugin_options;
+	}
+
+	/*
+	 * INPUTS
+	 */
+	
+	//Banner Heading
+	public function jw_banner_heading_setting() {
+		echo "<input name='jw_plugin_options[jw_banner_heading]' type='text' value='{$this->options['jw_banner_heading']}' />";
+	}
+
+	//Your Logo
+	public function jw_logo_setting() {
+		echo '<input type="file" name="jw_logo_upload" /><br /><br />';
+		if(isset($this->options['jw_logo'])) {
+			echo "<img src='{$this->options['jw_logo']}' />";
+		}
+	}
+}
+
+add_action('admin_menu', function() {
+	JW_Options::add_menu_page();
+});
+
+add_action('admin_init', function() {
+	new JW_Options();
+});
