@@ -489,6 +489,8 @@ Version: 1.0
 
 //NOTA: http://.../wp-admin/options.php contiene un array con tutte le opzioni del nostro sito wordpress
 
+//NOTA: Il plugin fa uno storage delle optioni in un'array, per richiamarlo nel frontend: $o = get_options('jw_plugin_options');
+
 class JW_Options {
 	ublic $options;
 
@@ -526,7 +528,10 @@ class JW_Options {
 		//Banner Field
 		add_settings_field('jw_banner_heading', 'Baner Heading',  array($this, 'jw_banner_heading_setting'), __FILE__, 'jw_main_section');
 
+		//Logo Field
 		add_settings_field('jw_logo', 'Your Logo',  array($this, 'jw_logo_setting'), __FILE__, 'jw_main_section');
+
+		add_settings_field('jw_cholor_scheme', 'Your Desire Color Scheme',  array($this, 'jw_cholor_scheme_setting'), __FILE__, 'jw_main_section');
 
 	}
 
@@ -563,6 +568,18 @@ class JW_Options {
 		if(isset($this->options['jw_logo'])) {
 			echo "<img src='{$this->options['jw_logo']}' />";
 		}
+	}
+
+	//Color Schema
+	public function jw_cholor_scheme_setting() {
+		$items = array('Red', 'Green', 'Blue', 'Yellow');
+		echo "<select name='jw_plugin_optons[jw_color_scheme]'>";
+		foreach($items as $item) {
+			$selected = ($this->options['jw_color_scheme'] === $item)? 'selected="selected"' : '';
+			echo "<option value='$item' $selected>$item</option>";
+		}
+		echo "</select>";
+			
 	}
 }
 
