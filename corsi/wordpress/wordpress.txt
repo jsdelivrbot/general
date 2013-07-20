@@ -473,7 +473,7 @@ add_filter('cron_schedules', function($schedules) {
 	return $schedules;
 });
 
-/** 7
+/** 8
   * - 
   * Creare una pagina ammistrativa per customizzare il tema
   **/
@@ -590,3 +590,173 @@ add_action('admin_menu', function() {
 add_action('admin_init', function() {
 	new JW_Options();
 });
+
+/** 9
+  * - 
+  * Creare dei custom post-types per gestire differentemente i tipi di post
+  * comprendendo delle tassonomie custom e dei metabox settabili
+  **/
+
+/*
+Plugin Name: Movies Post Type
+Plugin URI: giub.it			//URL Documentazione
+Description: Movie post Type 4 Admin Area
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+class JW_Movies_Post_Type() {
+	public function __construct() {
+		$this->register_post_type();
+		$this->taxonomies();
+		$this->metaboxes();
+	}
+
+	public function register_post_type() {
+		$args = array(
+			'labels' => array(
+				'name' 					=> 'Movies',
+				'singular_name' 		=> 'Movie',
+				'add_new'				=> 'Add New Movie',
+				'add_new_item' 			=> 'Add New Movie',
+				'edit_item' 			=> 'Edit Item',
+				'new_item'				=> 'Add New Item',
+				'view_item' 			=> 'View Movie',
+				'search_items'			=> 'Search Movies',
+				'not_found'				=> 'No Movies Found',
+				'not_found_in_trash' 	=> 'No Movies Found in Trash'
+			),
+			'query_var' => 'movies',
+			'rewrite'   => array (
+				'slug' 	=> '/movies',
+			),
+			'public' 		=> true,
+			'menu_position' => 5,
+			//Icone in: wp-admin/images/...
+			'menu_icon' 	=> admin_url().'images/media-button-video.gif', 
+			'supports' => array(
+				'title',
+				'thumbnail',
+				'editor',
+				'excerpt',
+				'custom-fields'
+			)
+		);
+		register_post_type('jw_movie', $args);
+	}
+
+	public function taxonomies() {
+		$taxonomies = array();
+
+		$taxonomies['genre'] = array(
+			'hierarchical' => true,
+			'query_var' => 'movie_genre',
+			'rewrite' 	=> array(
+				'slug' 	=> 'movies/genre'
+			),
+			//Stesse labels prese da sopra
+			labels' => array(
+				'name' 					=> 'Movies',
+				'singular_name' 		=> 'Movie',
+				'add_new'				=> 'Add New Movie',
+				'add_new_item' 			=> 'Add New Movie',
+				'edit_item' 			=> 'Edit Item',
+				'new_item'				=> 'Add New Item',
+				'view_item' 			=> 'View Movie',
+				'search_items'			=> 'Search Movies',
+				'not_found'				=> 'No Movies Found',
+				'not_found_in_trash' 	=> 'No Movies Found in Trash'
+			),
+		);
+
+		//Crea un altra lista di categorie a cui associare i post
+		$taxonomies['studio'] = array(
+			'hierarchical' => true,
+			'query_var' => 'movie_studio',
+			'rewrite' 	=> array(
+				'slug' 	=> 'movies/studios'
+			),
+			//Stesse labels prese da sopra
+			labels' => array(
+				'name' 					=> 'Studios',
+				'singular_name' 		=> 'Movie',
+				'add_new'				=> 'Add New Movie',
+				'add_new_item' 			=> 'Add New Movie',
+				'edit_item' 			=> 'Edit Item',
+				'new_item'				=> 'Add New Item',
+				'view_item' 			=> 'View Movie',
+				'search_items'			=> 'Search Studios',
+				'not_found'				=> 'No Studios Found',
+				'not_found_in_trash' 	=> 'No Studios Found in Trash'
+			),
+		);
+
+		$this->register_all_taxonomies($taxonomies);
+	}
+
+	public function register_all_taxonomies($taxonomies) {
+		foreach($taxonomies as $name => $arr) {
+			register_taxonomy($name, array('jw_movie'), $arr);
+
+		}	
+	}
+
+	public function metaboxes() {
+		add_action('add_meta_boxes', function() {
+			//css id, title, cb func, page, priority, cv func arguments
+			add_meta_box('jw_movie_lenght', 'Movie Length', 'movie_length', 'jw_movie');
+		});
+
+		functon movie_length($post) {
+			$length = get_post_meta($post->ID, 'jw_movie_length', true);
+			?>
+				<label for="jw_movie_length"> Length: </label>
+				<input type="text" class="widefat" name="jw_movie_length" value="<?php echo esc_attr($length); ?>" />
+			<?php
+		}
+
+		//Salvo il valore del meta Box
+		add_action('save_post', function() {
+			if(isset($_POST['jw_movie_length'])) {
+				update_post_meta(
+					$id,
+					'jw_movie_length',
+					strip_tags($_POST['jw_movie_length'])
+				);
+			}
+		});
+	}
+}
+
+add_action('init', function() {
+	new JW_Movies_Post_Type();
+});
+
+/* 9.1
+ * Creare la giusta Query per richiedere questi custom post_types
+ * Da utilizzare negli shortcut oppure nel frontend
+ */
+
+$loop = new WP_Query(
+		array(
+			'post_type' => 'jw_movie',
+			'orderby'	=> 'title'
+		)
+	);
+
+if($loop->have_posts()) {
+	while($loop->have_posts()) {
+		$loop->the_post();
+		$meta = get_post_meta(get_the_id(), ''); //2° parametro vuoto così returna indipendentemente dal "post-type"
+
+		$post_dates = array(
+			'link' 			=> get_the_permalink(),
+			'title' 		=> get_the_title(),
+			'excerpt'		=> get_the_excerpt(),
+			'movie_length' 	=> $meta['jw_movie_length']
+		);
+	}
+}
+
+
