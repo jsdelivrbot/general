@@ -759,4 +759,35 @@ if($loop->have_posts()) {
 	}
 }
 
+/** 9
+  * - 
+  * Creare un plug in per la gestione degli utenti admin
+  * Quando si hanno pochi utenti admin meglio togliere
+  * manualmente le aree del CMS che non devono utilizzare
+  **/
+
+/*
+Plugin Name: Remove Admin Menu
+Plugin URI: giub.it			
+Description: Remove Admin Menu
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+function remove_menus () {
+global $menu;	
+	$user = wp_get_current_user();
+	if($user->user_email == 'info@lifeclass.it') {
+		remove_menu_page('plugins.php');
+		remove_menu_page('users.php');
+		remove_menu_page('tools.php');
+		remove_menu_page('options-general.php');
+		remove_menu_page('users.php');
+		remove_submenu_page('themes.php','themes.php');
+		//Per rimuovere pugine con custom post type
+		?><style>.toplevel_page_woocommerce{display:none;}</style><?php
+	}
+}
+add_action('admin_menu', 'remove_menus');
 
