@@ -791,3 +791,114 @@ global $menu;
 }
 add_action('admin_menu', 'remove_menus');
 
+
+/** 9
+  * - 
+  * Metabox per richiamare iscrizione MailUp
+  **/
+
+/*
+Plugin Name: MetaBox Mailup
+Plugin URI: giub.it			
+Description: MetaBox Mailup
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
+
+class Mailup_Metabox {
+	public function __construct() {
+		$this->metaboxes();
+	}	
+
+	public function metaboxes() {
+		add_action('add_meta_boxes', function() {
+			//css id, title, cb func, page, priority, cv func arguments
+			add_meta_box('mailup_mb', 'Mailup<span id="g_doc"> [<a target="_blank" href="/wp-content/plugins/lc-giub-shortocdes/giub-lifeclass-documentation.txt" />Documentation</a>]</span>', 'mu_settings', 'page');
+		});
+
+		function mu_settings($post) {
+			$id = $post->ID;
+			
+			$g_mu_lists 		= get_post_meta($id, 'g_mu_lists', true);
+			$g_mu_title 		= get_post_meta($id, 'g_mu_title', true);
+			$g_mu_type  		= get_post_meta($id, 'g_mu_type', true);
+			$g_mu_display		= get_post_meta($id, 'g_mu_display', true);
+			$g_mu_thankyou_page = get_post_meta($id, 'g_mu_thankyou_page', true);
+
+			?>
+			<style>
+			#mailup_mb td.custom-title { width: 30%; height: 28px; }
+			#adv-settings #g_doc { display: none; }
+			#mailup_mb tr {  }
+			</style>
+			<table class="custom-table">
+			<tr class="">
+				<td class="custom-title">
+					<label for="g_mu_lists"> Liste d'iscrizione </label>
+				</td>
+				<td clas="custom-input">
+					<input type="text" class="widefat" name="g_mu_lists" id="g_mu_lists" placeholder="es: 170,171" value="<?php echo esc_attr($g_mu_lists); ?>" />
+				</td>
+			</tr>
+			<tr class="">
+				<td class="custom-title">
+					<label for="g_mu_title"> Titolo Persuasivo (* Optional)</label>
+				</td>
+				<td clas="custom-input">
+					<input type="text" class="widefat" name="g_mu_title" id="g_mu_title" value="<?php echo esc_attr($g_mu_title); ?>" />
+				</td>
+			</tr>
+			<tr class="">
+				<td class="custom-title">
+					<label for="g_mu_type"> Tipo </label>
+				</td>
+				<td clas="custom-input">
+					<select class="penguin-select" id="g_mu_type" name="g_mu_type">
+						<option value="mailup1" <?php if($g_mu_type == 'mailup1') echo 'selected="selected"'; ?>>mailup1</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="">
+				<td class="custom-title">
+					<label for="g_mu_display"> Mostra </label>
+				</td>
+				<td clas="custom-input">
+					<select class="penguin-select" id="g_mu_display" name="g_mu_display">
+						<option value="none" <?php if($g_mu_display == 'none') echo 'selected="selected"'; ?>><?php echo __('Hide', 'alterna'); ?></option>
+						<option value="show" <?php if($g_mu_display == 'show') echo 'selected="selected"'; ?>><?php echo __('Show', 'alterna'); ?></option>						
+					</select>
+				</td>
+			</tr>
+			<tr class="">
+				<td class="custom-title">
+					<label for="g_mu_thankyou_page"> <?php echo __('Thankyou Page Url', 'alterna'); ?> </label>
+				</td>
+				<td clas="custom-input">
+					<select class="penguin-select" id="g_mu_thankyou_page" name="g_mu_thankyou_page">
+						<option value="/thankyou" <?php if($g_mu_thankyou_page == '/thankyou') echo 'selected="selected"'; ?>>Thankyou</option>
+					</select>
+				</td>
+			</tr>
+			</table>				
+			<?php			
+		}
+
+		//Salvo il valore del meta Box di Mailup
+		add_action('save_post', 'g_mu_save');
+		
+		function g_mu_save($id) {				
+			if(isset($_POST['g_mu_lists']))
+				update_post_meta($id,'g_mu_lists', strip_tags($_POST['g_mu_lists'])) || add_post_meta($id,'g_mu_lists', strip_tags($_POST['g_mu_lists']));
+			if(isset($_POST['g_mu_title']))
+				 update_post_meta($id,'g_mu_title',$_POST['g_mu_title']) || add_post_meta($id,'g_mu_title', $_POST['g_mu_title']);
+			if(isset($_POST['g_mu_type']))
+				update_post_meta($id,'g_mu_type', strip_tags($_POST['g_mu_type'])) || add_post_meta($id,'g_mu_type', strip_tags($_POST['g_mu_type'])); 
+			if(isset($_POST['g_mu_display']))
+				update_post_meta($id,'g_mu_display', strip_tags($_POST['g_mu_display'])) || add_post_meta($id,'g_mu_display', strip_tags($_POST['g_mu_display']));
+			if(isset($_POST['g_mu_thankyou_page']))
+				update_post_meta($id,'g_mu_thankyou_page', strip_tags($_POST['g_mu_thankyou_page'])) || add_post_meta($id,'g_mu_thankyou_page', strip_tags($_POST['g_mu_thankyou_page']));
+		}
+	}
+}
+
