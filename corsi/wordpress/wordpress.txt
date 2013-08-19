@@ -791,12 +791,70 @@ global $menu;
 }
 add_action('admin_menu', 'remove_menus');
 
+/** 10
+  * - 
+  * Metabox con textarea per Descrizione Supplementare
+  **/
+/*
+Plugin Name: MetaBox Descrizione Supplementare
+Plugin URI: giub.it			
+Description: Textarea Descrizione Supplementare
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
 
-/** 9
+class TextArea_Metabox {
+	public function __construct() {
+		$this->metaboxes();
+	}	
+
+	public function metaboxes() {
+		add_action('add_meta_boxes', function() {			
+			add_meta_box('onsale_settings', 'Descrizione breve offerta', 'onsale_settings', 'product');
+		});		
+
+		//MetaBox Descrizione per lista offerte
+		function onsale_settings($post) {
+			$id = $post->ID;
+			$g_onsale_text 	= get_post_meta($id, 'Descrizione_breve_offerta', true);
+			$settings = array(
+			    'textarea_name' => 'Descrizione breve offerta',
+			    'media_buttons' => true,
+			    'textarea_rows' => 9,
+			    'tinymce' => array(
+			        'theme_advanced_buttons1' => 'bold,italic,underline,|,' .
+			            'bullist,blockquote,|,justifyleft,justifycenter' .
+			            ',justifyright,justifyfull,|,link,unlink,|' .
+			            ',spellchecker,wp_fullscreen,wp_adv'
+			    )
+			);
+			wp_editor( $g_onsale_text, 'g_onsale_text', $settings );
+			?> 
+			<style>#onsale_settings .wp_themeSkin iframe { background: #fff; }</style>
+			<?php
+		}
+
+		//Salvo il valore dei Metabox
+		add_action('save_post', 'g_mu_save');	
+
+		function g_mu_save($id) {		
+			//Dati Descrizione offerta
+			if(isset($_POST['Descrizione_breve_offerta']))
+				update_post_meta($id,'Descrizione_breve_offerta',$_POST['Descrizione_breve_offerta']) || add_post_meta($id,'Descrizione_breve_offerta', $_POST['Descrizione_breve_offerta']);
+
+		}
+	}
+}
+add_action('init', function() {
+	new TextArea_Metabox();
+});
+
+
+/** 11
   * - 
   * Metabox per richiamare iscrizione MailUp
   **/
-
 /*
 Plugin Name: MetaBox Mailup
 Plugin URI: giub.it			
@@ -901,4 +959,6 @@ class Mailup_Metabox {
 		}
 	}
 }
-
+add_action('init', function() {
+	new Mailup_Metabox();
+});
