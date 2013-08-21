@@ -479,7 +479,7 @@ add_filter('cron_schedules', function($schedules) {
   **/
 
 /*
-Plugin Name: JW Options	
+Plugin Name: G Options
 Plugin URI: giub.it			//URL Documentazione
 Description: Demo WP Options
 Author: Daniele Covallero
@@ -488,108 +488,71 @@ Version: 1.0
 */
 
 //NOTA: http://.../wp-admin/options.php contiene un array con tutte le opzioni del nostro sito wordpress
-
 //NOTA: Il plugin fa uno storage delle optioni in un'array, per richiamarlo nel frontend: $o = get_options('jw_plugin_options');
 
-class JW_Options {
-	ublic $options;
-
-	public function __construct() {
-		$this->register_settings_and_fields();
-		$options = get_option('jw_plugin_options');
+class g_Opt_page {
+	function __construct() {
+		add_action('admin_menu', array(&$this, 'admin_menu'));
+		add_action( 'admin_init', array( $this, 'register_mysettings' ));
 	}
-
-	public function add_menu_page() {
-		add_options_page('Theme Options', 'Theme Options', 'administrator', __FILE__, array(JW_Options, 'display_options_page'));
+	function admin_menu () {		
+		add_theme_page('Daniele - Amministrazione sito','Lifeclass Admin','manage_options','amm_daniele',array($this, 'settings_page'));
 	}
+	function register_mysettings() { // whitelist options
+	  register_setting('g_Opt-group', 'array_key', array($this, 'check_ID'));
 
-	public function display_options_page() {
+	  add_settings_section(
+            'g_opt_ammsettings',
+            'Admin Area',
+            array( $this, 'print_section_info' ),
+            'g_Opt'
+        );	
+            
+        add_settings_field(
+            'ck_amm_modify', 
+            'Sito in manutenzione', 
+            array( $this, 'create_an_id_field' ), 
+            'g_Opt',
+            'g_opt_ammsettings'			
+        );		
+    }
+	
+    public function check_ID( $input ) {
+    	//Checkbox Sito in manutenzione  	
+    	
+        $mid = $input['ck_amm_modify'];			
+        if ( get_option( 'ck_amm_modify' ) === FALSE ) add_option( 'ck_amm_modify', $mid );
+        else update_option( 'ck_amm_modify', $mid );            
+        
+        return $mid;
+    }
+	
+    public function print_section_info(){
+        //print 'Enter your setting below:';
+    }
+	
+    public function create_an_id_field(){
+        ?><input type="checkbox" id="ck_amm_modify" name="array_key[ck_amm_modify]" <?php echo ((get_option( 'ck_amm_modify' ))? 'checked':''); ?> /><?php
+    }
+	
+	public  function settings_page () {
 		?>
 		<div class="wrap">
-			<?php screen_icon(); ?>
-			<h2>My Theme Options</h2>
-			<form method="post" action="options.php" enctype="multipart/form-data">
-				<?php settings_fields('jw_plugin_options'); ?>
-				<?php do_settings_sections(__FILE__); ?>
-				<p class="submit">
-					<input name="submit" type="submit" class="button-primary" value="Save Changes" />
-				</p>
-			</form> 
+		    <?php screen_icon(); ?>
+		    <h2>Settaggi Amministrativi Lifeclass</h2>			
+		    <form method="post" action="options.php">
+		        <?php
+	                    // This prints out all hidden setting fields
+			    settings_fields( 'g_Opt-group' );	
+			    do_settings_sections( 'g_Opt' );
+			?>
+		        <?php submit_button(); ?>
+		    </form>
 		</div>
 		<?php
 	}
-
-	public function register_register_and_fields() {
-		//1° parametro custom come si vuole
-		register_setting('jw_plugin_options', 'jw_plugin_options', $array($this, 'jw_validate_settings')); //3rd param = optional cb
-
-		add_setting_section('jw_main_section', 'Main Settings', array($this, 'jw_main_section_cb'), __FILE__); //id, title, cb, witch page
-
-		//Banner Field
-		add_settings_field('jw_banner_heading', 'Baner Heading',  array($this, 'jw_banner_heading_setting'), __FILE__, 'jw_main_section');
-
-		//Logo Field
-		add_settings_field('jw_logo', 'Your Logo',  array($this, 'jw_logo_setting'), __FILE__, 'jw_main_section');
-
-		add_settings_field('jw_cholor_scheme', 'Your Desire Color Scheme',  array($this, 'jw_cholor_scheme_setting'), __FILE__, 'jw_main_section');
-
-	}
-
-	public function jw_main_section_cb() {
-		// optional
-	}
-
-	public function jw_validate_settings($plugin_options) {
-
-		//Is the file an image?
-		if(!empty($_FILES['jw_logo_upload']['tmp_name'])) {
-			$override = array('test_form' => false);
-			$file = wp_handle_upload($_FILES['jw_logo_upload'], $override);
-			$plugin_options['jw_logo'] = $file['url'];
-		} else {
-			$plugin_options['jw_logo'] = $this->options['jw_logo'];
-		}
-
-		return $plugin_options;
-	}
-
-	/*
-	 * INPUTS
-	 */
-	
-	//Banner Heading
-	public function jw_banner_heading_setting() {
-		echo "<input name='jw_plugin_options[jw_banner_heading]' type='text' value='{$this->options['jw_banner_heading']}' />";
-	}
-
-	//Your Logo
-	public function jw_logo_setting() {
-		echo '<input type="file" name="jw_logo_upload" /><br /><br />';
-		if(isset($this->options['jw_logo'])) {
-			echo "<img src='{$this->options['jw_logo']}' />";
-		}
-	}
-
-	//Color Schema
-	public function jw_cholor_scheme_setting() {
-		$items = array('Red', 'Green', 'Blue', 'Yellow');
-		echo "<select name='jw_plugin_optons[jw_color_scheme]'>";
-		foreach($items as $item) {
-			$selected = ($this->options['jw_color_scheme'] === $item)? 'selected="selected"' : '';
-			echo "<option value='$item' $selected>$item</option>";
-		}
-		echo "</select>";
-			
-	}
 }
-
-add_action('admin_menu', function() {
-	JW_Options::add_menu_page();
-});
-
-add_action('admin_init', function() {
-	new JW_Options();
-});
+new g_Opt_page;
 
 /** 9
   * - 
