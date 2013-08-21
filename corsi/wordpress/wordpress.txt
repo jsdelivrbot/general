@@ -925,3 +925,15 @@ class Mailup_Metabox {
 add_action('init', function() {
 	new Mailup_Metabox();
 });
+
+
+/** 12
+  * - 
+  * Alert sito in manutenzione quando il check amministrativo relativo è stato premuto
+  **/
+
+add_action( 'wp_after_admin_bar_render', 'noModify_banner' );
+function noModify_banner() {
+	if( get_option( 'ck_amm_modify' ) && is_admin() && $_SERVER['HTTP_HOST'] != 'www.lifeclass.dev')
+		echo '<div class="update-nag" style="margin:0;background-color: #FFDACC;border-color: #E67255;-webkit-border-bottom-right-radius: 0px;-webkit-border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;">Attenzione: Sito in manutenzione! Le modifiche effettuate in questa fase non verranno salvate.</div>';
+}
