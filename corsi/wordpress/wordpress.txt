@@ -937,3 +937,54 @@ function noModify_banner() {
 	if( get_option( 'ck_amm_modify' ) && is_admin() && $_SERVER['HTTP_HOST'] != 'www.lifeclass.dev')
 		echo '<div class="update-nag" style="margin:0;background-color: #FFDACC;border-color: #E67255;-webkit-border-bottom-right-radius: 0px;-webkit-border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;">Attenzione: Sito in manutenzione! Le modifiche effettuate in questa fase non verranno salvate.</div>';
 }
+
+/* 13
+ * -
+ * Modifica dell'Admin Bar di Wordpress
+ */
+function mytheme_admin_bar_render() {
+	global $wp_admin_bar;
+	$wp_admin_bar->remove_menu('wp-logo');
+	$wp_admin_bar->remove_menu('view-site');
+
+	//Utility sito
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'site-name', // use 'false' for a root menu, or pass the ID of the parent menu
+		'id' => 'this-site-node', // link ID, defaults to a sanitized title value
+		'title' => __('Utility sito'), // link title
+		'href' => '', // name of file
+		'meta' => false // array of any of the following options: array( 'html' => '', 'class' => '', 'onclick' => '', target => '', title => '' );
+	));
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'this-site-node', 
+		'id' => 'ab_alt_shortcodes', 
+		'title' => __('Shortcode Template'), 
+		'href' => 'http://themes.activetofocus.com/alterna/demo/dropcap-blockquote',
+		'meta' => array('target' => '_blank') 
+	));
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'this-site-node', 
+		'id' => 'ab_g_doc', 
+		'title' => __('Documentazione Daniele'), 
+		'href' => content_url( '/plugins/lc-giub-shortocdes/giub-lifeclass-documentation.txt'), 
+		'meta' => array('target' => '_blank') 
+	));		
+
+	//Modificare i nodi dell'Admin Bar
+	$all_nodes = $wp_admin_bar->get_nodes();
+    foreach($all_nodes as $key => $val) {
+        $current_node = $all_nodes[$key];
+        $wp_admin_bar->remove_node($key);
+
+        if($current_node->title == 'Lifeclass centri benessere') {
+        	echo "<style>
+		        	.lc-wpbar-ico { background-image: url(http://www.lifeclass.it/wp-content/themes/alterna/img/lc-favico-minwhite.png);position: relative;float: left;background-size: 16px 16px; }
+		        	.menupop.hover .lc-wpbar-ico { background-image: url(http://www.lifeclass.it/wp-content/themes/alterna/img/lc-favico-minblack.png); }
+	        	  </style>";
+        	
+        	$current_node->title = '<span class="lc-wpbar-ico" style="width: 16px;height: 16px;margin: 5px 6px 0 0;"></span>';
+        }
+        $wp_admin_bar->add_node($current_node);
+    }
+}
+add_action( 'wp_before_admin_bar_render', 'mytheme_admin_bar_render' );
