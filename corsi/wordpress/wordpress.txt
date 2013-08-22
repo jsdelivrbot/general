@@ -479,7 +479,7 @@ add_filter('cron_schedules', function($schedules) {
   **/
 
 /*
-Plugin Name: JW Options	
+Plugin Name: G Options
 Plugin URI: giub.it			//URL Documentazione
 Description: Demo WP Options
 Author: Daniele Covallero
@@ -488,108 +488,71 @@ Version: 1.0
 */
 
 //NOTA: http://.../wp-admin/options.php contiene un array con tutte le opzioni del nostro sito wordpress
-
 //NOTA: Il plugin fa uno storage delle optioni in un'array, per richiamarlo nel frontend: $o = get_options('jw_plugin_options');
 
-class JW_Options {
-	ublic $options;
-
-	public function __construct() {
-		$this->register_settings_and_fields();
-		$options = get_option('jw_plugin_options');
+class g_Opt_page {
+	function __construct() {
+		add_action('admin_menu', array(&$this, 'admin_menu'));
+		add_action( 'admin_init', array( $this, 'register_mysettings' ));
 	}
-
-	public function add_menu_page() {
-		add_options_page('Theme Options', 'Theme Options', 'administrator', __FILE__, array(JW_Options, 'display_options_page'));
+	function admin_menu () {		
+		add_theme_page('Daniele - Amministrazione sito','Lifeclass Admin','manage_options','amm_daniele',array($this, 'settings_page'));
 	}
+	function register_mysettings() { // whitelist options
+	  register_setting('g_Opt-group', 'array_key', array($this, 'check_ID'));
 
-	public function display_options_page() {
+	  add_settings_section(
+            'g_opt_ammsettings',
+            'Admin Area',
+            array( $this, 'print_section_info' ),
+            'g_Opt'
+        );	
+            
+        add_settings_field(
+            'ck_amm_modify', 
+            'Sito in manutenzione', 
+            array( $this, 'create_an_id_field' ), 
+            'g_Opt',
+            'g_opt_ammsettings'			
+        );		
+    }
+	
+    public function check_ID( $input ) {
+    	//Checkbox Sito in manutenzione  	
+    	
+        $mid = $input['ck_amm_modify'];			
+        if ( get_option( 'ck_amm_modify' ) === FALSE ) add_option( 'ck_amm_modify', $mid );
+        else update_option( 'ck_amm_modify', $mid );            
+        
+        return $mid;
+    }
+	
+    public function print_section_info(){
+        //print 'Enter your setting below:';
+    }
+	
+    public function create_an_id_field(){
+        ?><input type="checkbox" id="ck_amm_modify" name="array_key[ck_amm_modify]" <?php echo ((get_option( 'ck_amm_modify' ))? 'checked':''); ?> /><?php
+    }
+	
+	public  function settings_page () {
 		?>
 		<div class="wrap">
-			<?php screen_icon(); ?>
-			<h2>My Theme Options</h2>
-			<form method="post" action="options.php" enctype="multipart/form-data">
-				<?php settings_fields('jw_plugin_options'); ?>
-				<?php do_settings_sections(__FILE__); ?>
-				<p class="submit">
-					<input name="submit" type="submit" class="button-primary" value="Save Changes" />
-				</p>
-			</form> 
+		    <?php screen_icon(); ?>
+		    <h2>Settaggi Amministrativi Lifeclass</h2>			
+		    <form method="post" action="options.php">
+		        <?php
+	                    // This prints out all hidden setting fields
+			    settings_fields( 'g_Opt-group' );	
+			    do_settings_sections( 'g_Opt' );
+			?>
+		        <?php submit_button(); ?>
+		    </form>
 		</div>
 		<?php
 	}
-
-	public function register_register_and_fields() {
-		//1° parametro custom come si vuole
-		register_setting('jw_plugin_options', 'jw_plugin_options', $array($this, 'jw_validate_settings')); //3rd param = optional cb
-
-		add_setting_section('jw_main_section', 'Main Settings', array($this, 'jw_main_section_cb'), __FILE__); //id, title, cb, witch page
-
-		//Banner Field
-		add_settings_field('jw_banner_heading', 'Baner Heading',  array($this, 'jw_banner_heading_setting'), __FILE__, 'jw_main_section');
-
-		//Logo Field
-		add_settings_field('jw_logo', 'Your Logo',  array($this, 'jw_logo_setting'), __FILE__, 'jw_main_section');
-
-		add_settings_field('jw_cholor_scheme', 'Your Desire Color Scheme',  array($this, 'jw_cholor_scheme_setting'), __FILE__, 'jw_main_section');
-
-	}
-
-	public function jw_main_section_cb() {
-		// optional
-	}
-
-	public function jw_validate_settings($plugin_options) {
-
-		//Is the file an image?
-		if(!empty($_FILES['jw_logo_upload']['tmp_name'])) {
-			$override = array('test_form' => false);
-			$file = wp_handle_upload($_FILES['jw_logo_upload'], $override);
-			$plugin_options['jw_logo'] = $file['url'];
-		} else {
-			$plugin_options['jw_logo'] = $this->options['jw_logo'];
-		}
-
-		return $plugin_options;
-	}
-
-	/*
-	 * INPUTS
-	 */
-	
-	//Banner Heading
-	public function jw_banner_heading_setting() {
-		echo "<input name='jw_plugin_options[jw_banner_heading]' type='text' value='{$this->options['jw_banner_heading']}' />";
-	}
-
-	//Your Logo
-	public function jw_logo_setting() {
-		echo '<input type="file" name="jw_logo_upload" /><br /><br />';
-		if(isset($this->options['jw_logo'])) {
-			echo "<img src='{$this->options['jw_logo']}' />";
-		}
-	}
-
-	//Color Schema
-	public function jw_cholor_scheme_setting() {
-		$items = array('Red', 'Green', 'Blue', 'Yellow');
-		echo "<select name='jw_plugin_optons[jw_color_scheme]'>";
-		foreach($items as $item) {
-			$selected = ($this->options['jw_color_scheme'] === $item)? 'selected="selected"' : '';
-			echo "<option value='$item' $selected>$item</option>";
-		}
-		echo "</select>";
-			
-	}
 }
-
-add_action('admin_menu', function() {
-	JW_Options::add_menu_page();
-});
-
-add_action('admin_init', function() {
-	new JW_Options();
-});
+new g_Opt_page;
 
 /** 9
   * - 
@@ -791,12 +754,70 @@ global $menu;
 }
 add_action('admin_menu', 'remove_menus');
 
+/** 10
+  * - 
+  * Metabox con textarea per Descrizione Supplementare
+  **/
+/*
+Plugin Name: MetaBox Descrizione Supplementare
+Plugin URI: giub.it			
+Description: Textarea Descrizione Supplementare
+Author: Daniele Covallero
+Author URI: giub.it
+Version: 1.0
+*/
 
-/** 9
+class TextArea_Metabox {
+	public function __construct() {
+		$this->metaboxes();
+	}	
+
+	public function metaboxes() {
+		add_action('add_meta_boxes', function() {			
+			add_meta_box('onsale_settings', 'Descrizione breve offerta', 'onsale_settings', 'product');
+		});		
+
+		//MetaBox Descrizione per lista offerte
+		function onsale_settings($post) {
+			$id = $post->ID;
+			$g_onsale_text 	= get_post_meta($id, 'Descrizione_breve_offerta', true);
+			$settings = array(
+			    'textarea_name' => 'Descrizione breve offerta',
+			    'media_buttons' => true,
+			    'textarea_rows' => 9,
+			    'tinymce' => array(
+			        'theme_advanced_buttons1' => 'bold,italic,underline,|,' .
+			            'bullist,blockquote,|,justifyleft,justifycenter' .
+			            ',justifyright,justifyfull,|,link,unlink,|' .
+			            ',spellchecker,wp_fullscreen,wp_adv'
+			    )
+			);
+			wp_editor( $g_onsale_text, 'g_onsale_text', $settings );
+			?> 
+			<style>#onsale_settings .wp_themeSkin iframe { background: #fff; }</style>
+			<?php
+		}
+
+		//Salvo il valore dei Metabox
+		add_action('save_post', 'g_mu_save');	
+
+		function g_mu_save($id) {		
+			//Dati Descrizione offerta
+			if(isset($_POST['Descrizione_breve_offerta']))
+				update_post_meta($id,'Descrizione_breve_offerta',$_POST['Descrizione_breve_offerta']) || add_post_meta($id,'Descrizione_breve_offerta', $_POST['Descrizione_breve_offerta']);
+
+		}
+	}
+}
+add_action('init', function() {
+	new TextArea_Metabox();
+});
+
+
+/** 11
   * - 
   * Metabox per richiamare iscrizione MailUp
   **/
-
 /*
 Plugin Name: MetaBox Mailup
 Plugin URI: giub.it			
@@ -901,4 +922,69 @@ class Mailup_Metabox {
 		}
 	}
 }
+add_action('init', function() {
+	new Mailup_Metabox();
+});
 
+
+/** 12
+  * - 
+  * Alert sito in manutenzione quando il check amministrativo relativo è stato premuto
+  **/
+
+add_action( 'wp_after_admin_bar_render', 'noModify_banner' );
+function noModify_banner() {
+	if( get_option( 'ck_amm_modify' ) && is_admin() && $_SERVER['HTTP_HOST'] != 'www.lifeclass.dev')
+		echo '<div class="update-nag" style="margin:0;background-color: #FFDACC;border-color: #E67255;-webkit-border-bottom-right-radius: 0px;-webkit-border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;">Attenzione: Sito in manutenzione! Le modifiche effettuate in questa fase non verranno salvate.</div>';
+}
+
+/* 13
+ * -
+ * Modifica dell'Admin Bar di Wordpress
+ */
+function mytheme_admin_bar_render() {
+	global $wp_admin_bar;
+	$wp_admin_bar->remove_menu('wp-logo');
+	$wp_admin_bar->remove_menu('view-site');
+
+	//Utility sito
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'site-name', // use 'false' for a root menu, or pass the ID of the parent menu
+		'id' => 'this-site-node', // link ID, defaults to a sanitized title value
+		'title' => __('Utility sito'), // link title
+		'href' => '', // name of file
+		'meta' => false // array of any of the following options: array( 'html' => '', 'class' => '', 'onclick' => '', target => '', title => '' );
+	));
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'this-site-node', 
+		'id' => 'ab_alt_shortcodes', 
+		'title' => __('Shortcode Template'), 
+		'href' => 'http://themes.activetofocus.com/alterna/demo/dropcap-blockquote',
+		'meta' => array('target' => '_blank') 
+	));
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'this-site-node', 
+		'id' => 'ab_g_doc', 
+		'title' => __('Documentazione Daniele'), 
+		'href' => content_url( '/plugins/lc-giub-shortocdes/giub-lifeclass-documentation.txt'), 
+		'meta' => array('target' => '_blank') 
+	));		
+
+	//Modificare i nodi dell'Admin Bar
+	$all_nodes = $wp_admin_bar->get_nodes();
+    foreach($all_nodes as $key => $val) {
+        $current_node = $all_nodes[$key];
+        $wp_admin_bar->remove_node($key);
+
+        if($current_node->title == 'Lifeclass centri benessere') {
+        	echo "<style>
+		        	.lc-wpbar-ico { background-image: url(http://www.lifeclass.it/wp-content/themes/alterna/img/lc-favico-minwhite.png);position: relative;float: left;background-size: 16px 16px; }
+		        	.menupop.hover .lc-wpbar-ico { background-image: url(http://www.lifeclass.it/wp-content/themes/alterna/img/lc-favico-minblack.png); }
+	        	  </style>";
+        	
+        	$current_node->title = '<span class="lc-wpbar-ico" style="width: 16px;height: 16px;margin: 5px 6px 0 0;"></span>';
+        }
+        $wp_admin_bar->add_node($current_node);
+    }
+}
+add_action( 'wp_before_admin_bar_render', 'mytheme_admin_bar_render' );
