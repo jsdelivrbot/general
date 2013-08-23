@@ -13,8 +13,12 @@ su Preferences->Key Bindings User
 	{ "keys": ["ctrl+alt+x"], "command": "sftp_cancel_upload" }
 
 Altri shortcut
+	shift+tab			=> Tab verso sx
 	ctrl+l 				=> Seleziona la riga
-	alt+shift+2			=> Divide sublime in 2 finestre dx e sx
+	ctrl+d 				=> Multiseleziona parole uguali a quella selezionata
+	alt+shift+2			=> Divide sublime in 2 finestre dx e sx	
+	rotella premuta		=> Seleziona per colonna
+
 
 Plugin Installati e Relative Config personalizzate:
 
