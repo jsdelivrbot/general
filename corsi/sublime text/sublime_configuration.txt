@@ -1,0 +1,39 @@
+## GiuB Config Originaria Windows #
+
+Settaggi personalizzati su Preferences->Key Bindings Default:
+
+	{ "keys": ["ctrl+w"], "command": "toggle_side_bar" },
+	{ "keys": ["ctrl+shift+down"], "command": "lower_case" },
+	{ "keys": ["ctrl+shift+up"], "command": "upper_case" },
+
+su Preferences->Key Bindings User
+
+	{ "keys": ["ctrl+alt+u"], "command": "sftp_upload_file" },
+	{ "keys": ["ctrl+alt+s"], "command": "sftp_show_panel" },
+	{ "keys": ["ctrl+alt+x"], "command": "sftp_cancel_upload" }
+
+Altri shortcut
+	ctrl+l 				=> Seleziona la riga
+	alt+shift+2			=> Divide sublime in 2 finestre dx e sx
+
+Plugin Installati e Relative Config personalizzate:
+
+1) 	Plugin Name: Alignment 
+	Description: Allinea per colonna in base a dei caratteri selettori
+
+	Su keybindings Default:
+
+		{ "keys": ["ctrl+alt+a"], "command": "alignment" }
+
+	Su Settings Default:
+
+		"alignment_chars": ["=", ":"],
+		"alignment_space_chars": ["=", ":"],		
+		"alignment_prefix_chars": ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
+
+2) Plugin Name: Prefixr
+
+	{ "keys": ["ctrl+space+x"], "command": "prefixr" }
+
+3) Plugin Name: SFTP
+
