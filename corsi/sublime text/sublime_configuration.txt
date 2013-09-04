@@ -18,6 +18,7 @@ Altri shortcut
 	ctrl+d 				=> Multiseleziona parole uguali a quella selezionata
 	alt+shift+2			=> Divide sublime in 2 finestre dx e sx	
 	rotella premuta		=> Seleziona per colonna
+	ctrl+shift+d 		=> quick copy selection to line below
 
 
 Plugin Installati e Relative Config personalizzate:
@@ -41,3 +42,21 @@ Plugin Installati e Relative Config personalizzate:
 
 3) Plugin Name: SFTP
 
+	{ "keys": ["ctrl+alt+u"], "command": "sftp_upload_file" },
+	{ "keys": ["ctrl+alt+d"], "command": "sftp_download_file" },
+	{ "keys": ["ctrl+alt+s"], "command": "sftp_show_panel" },
+	{ "keys": ["ctrl+alt+x"], "command": "sftp_cancel_upload" }
+
+4) Plugin Name: Zen Coding
+
+	Install instructions: Package Control : Install -> Emmet
+
+5) Plugin Name: Jquery
+
+	Description: List of Jquery snippets
+
+	Install instructions: Package Control : Install -> jQuery
+
+6) Plugin Name: SideBar Enhancements
+
+	Description: Aggiunge una serie di opzioni cliccando col tasto destro su un file (view in browser & Find in Folder ecc...)
