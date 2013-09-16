@@ -16,14 +16,14 @@ Altri shortcut
 	shift+tab			=> Tab verso sx
 	ctrl+l 				=> Seleziona la riga
 	ctrl+d 				=> Multiseleziona parole uguali a quella selezionata
-	alt+shift+2			=> Divide sublime in 2 finestre dx e sx	
+	alt+shift+2			=> Divide sublime in 2 finestre dx e sx
 	rotella premuta		=> Seleziona per colonna
 	ctrl+shift+d 		=> quick copy selection to line below
 
 
 Plugin Installati e Relative Config personalizzate:
 
-1) 	Plugin Name: Alignment 
+1) 	Plugin Name: Alignment
 	Description: Allinea per colonna in base a dei caratteri selettori
 
 	Su keybindings Default:
@@ -33,15 +33,17 @@ Plugin Installati e Relative Config personalizzate:
 	Su Settings Default:
 
 		"alignment_chars": ["=", ":"],
-		"alignment_space_chars": ["=", ":"],		
+		"alignment_space_chars": ["=", ":"],
 		"alignment_prefix_chars": ["+", "-", "&", "|", "<", ">", "!", "~", "%", "/", "*", "."]
 
 2) Plugin Name: Prefixr
 
+	In KeyBuilding - Users:
 	{ "keys": ["ctrl+space+x"], "command": "prefixr" }
 
 3) Plugin Name: SFTP
 
+	In KeyBuilding - Users:
 	{ "keys": ["ctrl+alt+u"], "command": "sftp_upload_file" },
 	{ "keys": ["ctrl+alt+d"], "command": "sftp_download_file" },
 	{ "keys": ["ctrl+alt+s"], "command": "sftp_show_panel" },
@@ -60,3 +62,14 @@ Plugin Installati e Relative Config personalizzate:
 6) Plugin Name: SideBar Enhancements
 
 	Description: Aggiunge una serie di opzioni cliccando col tasto destro su un file (view in browser & Find in Folder ecc...)
+
+7) Plugin Name: TrailingSpaces
+
+	Description: Hightlingts spaces + shortcut to remove spaces
+
+	In KeyBuilding - Users:
+	{ "keys": ["ctrl+shift+t"], "command": "delete_trailing_spaces" }
+
+8) Plugin Name: Daylerees Colour Schemes
+
+	Description: Large Themes Packages
