@@ -63,6 +63,10 @@ Plugin Installati e Relative Config personalizzate:
 
 	Description: Aggiunge una serie di opzioni cliccando col tasto destro su un file (view in browser & Find in Folder ecc...)
 
+7) Plugin Name: Sublime Linter (Only 4 sublime text 2)
+
+	Description: Display sintax error
+
 7) Plugin Name: TrailingSpaces
 
 	Description: Hightlingts spaces + shortcut to remove spaces
@@ -73,3 +77,27 @@ Plugin Installati e Relative Config personalizzate:
 8) Plugin Name: Daylerees Colour Schemes
 
 	Description: Large Themes Packages
+	Best color scheme: Peacok
+
+9) Plugin Name: Theme - Soda
+
+	Description: Nerd Effect for Sublime
+
+	Install instructions: Open Preferences -> Settings Users:
+	"soda_folder_icons": true,
+	"theme": "Soda Dark.sublime-theme",
+	"soda_classic_tabs": true
+
+10) Plugin Name: Sublime Text 2 Stack Overflow Plugin
+
+	Description: Select + mouse Dx -> Search result on Stack Overflow
+
+11) Plugin Name: SublimeWordPressCodex
+
+	Description: Select + mouse Dx -> Search result on Wordpress Codex
+
+12) Plugin Name: PlainTasks
+
+	Description: Create nice .todo files
+
+	Documentation: https://github.com/aziz/PlainTasks
