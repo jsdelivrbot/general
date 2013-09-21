@@ -10,7 +10,7 @@ Required: [Soda Theme Plugin](http://buymeasoda.github.com/soda-theme/)
 
 ![Soda Light Theme](http://giub.it/wp-content/uploads/2013/09/soda-dark-green-sea-giub-theme.png)
 
-## Installation Manually
+## Manual Installation
 
 * This plugin works only with [Soda - Theme](http://buymeasoda.github.com/soda-theme/)
 * After install Soda Theme download these repo files using the GitHub .zip download option
@@ -18,7 +18,7 @@ Required: [Soda Theme Plugin](http://buymeasoda.github.com/soda-theme/)
 * Find your `Packages` directory using the menu item  `Preferences -> Browse Packages...`
 * Copy the folder into your Sublime Text `Packages/Theme - Soda` directory
 
-## Using Git
+## Installation Using Git
 
 Alternatively, if you are a git user, you can install the theme and keep up to date by cloning the repo directly into your `Packages` directory in the Sublime Text application settings area.
 
