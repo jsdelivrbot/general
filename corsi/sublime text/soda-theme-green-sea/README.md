@@ -66,3 +66,13 @@ To configure Sublime Text to use the theme, follow the instructions below for yo
 
 ## Bonus Options
 
+I raccomanded to use the classi Monkai `Color Scheme` or my better Color Scheme customization:
+
+* Using [Sublime Package Control](http://wbond.net/sublime_packages/package_control)
+* Download [Dayle Rees Color Schemes](https://github.com/daylerees/colour-schemes)
+* Under `Color Scheme` select: `Dayle Rees Color Schemes -> Peacock`
+
+## Development
+
+This Customization was developed by Daniele Covallero -> [GiuB.it](http://giub.it)
+
