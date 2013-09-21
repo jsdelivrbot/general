@@ -72,3 +72,5 @@ I raccomanded to use the classic Monkai `Color Scheme` or my better Color Scheme
 
 This Customization was developed by Daniele Covallero -> [GiuB.it](http://giub.it)
 
+For any compatibility problem contact me: [&#119;&#101;&#098;&#064;&#103;&#105;&#117;&#098;&#046;&#105;&#116;](mailto:&#119;&#101;&#098;&#064;&#103;&#105;&#117;&#098;&#046;&#105;&#116;)
+
