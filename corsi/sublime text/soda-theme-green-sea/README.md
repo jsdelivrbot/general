@@ -1,11 +1,9 @@
-# Soda Theme
+# Soda Dark Green Sea - by GiuB
 
 GiuB Dark Green Sea customization of standard Soda Dark Theme for Sublime Text 2 / 3.
 Ready: Sublime Text 2 / 3, Windows, Linux, Mac, Display retina.
 
-Required:
-
-Soda Theme Plugin: [http://buymeasoda.github.com/soda-theme/](http://buymeasoda.github.com/soda-theme/)
+Required: [Soda Theme Plugin](http://buymeasoda.github.com/soda-theme/)
 
 ## Soda Dark Green Sea GiuB Design
 
@@ -14,7 +12,7 @@ Soda Theme Plugin: [http://buymeasoda.github.com/soda-theme/](http://buymeasoda.
 ## Installation Manually
 
 * This plugin works only with [Soda - Theme](http://buymeasoda.github.com/soda-theme/)
-* After install Soda Theme download theese repo files using the GitHub .zip download option
+* After install Soda Theme download these repo files using the GitHub .zip download option
 * Unzip the files and rename the folder to `Soda Dark Green Sea GiuB`
 * Find your `Packages` directory using the menu item  `Preferences -> Browse Packages...`
 * Copy the folder into your Sublime Text `Packages/Theme - Soda` directory
@@ -27,7 +25,7 @@ You can locate your Sublime Text `Packages` directory by using the menu item `Pr
 
 While inside the `Packages/Theme - Soda` directory, clone the theme repository using the command below:
 
-    git clone https://github.com/GiuB/general/tree/master/corsi/sublime%20text/soda-theme-green-sea "Soda Dark Green Sea GiuB"
+    git clone https://github.com/GiuB/soda-theme-green-sea "Soda Dark Green Sea GiuB"
 
 ### Download Manually
 
@@ -48,7 +46,9 @@ To configure Sublime Text to use the theme, follow the instructions below for yo
 **Example Sublime Text 2 User Settings**
 
     {
-        "theme": "Soda Light.sublime-theme"
+        "theme": "Soda Dark Green Sea GiuB.sublime-theme",
+        "soda_classic_tabs": true,
+		"soda_folder_icons": true
     }
 
 ### Sublime Text 3
@@ -59,69 +59,10 @@ To configure Sublime Text to use the theme, follow the instructions below for yo
 **Example Sublime Text 3 User Settings**
 
     {
-        "theme": "Soda Light 3.sublime-theme"
+        "theme": "Soda Dark Green Sea 3.sublime-theme",
+        "soda_classic_tabs": true,
+		"soda_folder_icons": true
     }
-
-## Additional Features
-
-### Alternate Tab Styles
-
-Soda Theme ships with two alternate UI tab styles.
-
-By default, a square tab style is used. If you'd prefer to use the original curved tab style, add the following custom setting to your `Settings - User` file:
-
-    "soda_classic_tabs": true
-
-![Soda Tab Styles](http://buymeasoda.github.com/soda-theme/images/features/multiple-tab-styles.png)
-
-### Sidebar Folder Icons
-
-Soda Theme has the ability to use folder icons in the sidebar.
-
-If you'd like to use folder icons in the sidebar instead of the regular arrows, add the following custom setting to your `Settings - User` file:
-
-    "soda_folder_icons": true
-
-![Soda Folder Icons](http://buymeasoda.github.com/soda-theme/images/features/sidebar-folder-icons.png)
-
-### Retina Resolution UI
-
-Soda Theme has been designed to take advantage of retina resolution (high-dpi) displays. Both Soda Light and Soda Dark support retina displays.
-
-![Soda Retina](http://buymeasoda.github.com/soda-theme/images/features/soda-retina.png)
-
-### Theme Customisation
-
-Sublime Text provides an elegant way to tweak existing themes without having to duplicate or maintain a separate copy of the original theme. If there are aspects of Soda Theme that you would like to adjust, take a look at the [theme customisation](https://github.com/buymeasoda/soda-theme/wiki/Theme-customisation) wiki page.
 
 ## Bonus Options
 
-### Syntax Highlighting Colour Schemes
-
-The Soda Light screenshot uses a modified version of Espresso Tutti Colori and the Soda Dark screenshot uses a modified version of Monokai.
-
-If you'd like to use the syntax highlighting schemes shown in the screenshots: 
-
-* Download [colour-schemes.zip](http://buymeasoda.github.com/soda-theme/extras/colour-schemes.zip)
-* Unzip and place the extracted `tmtheme` files in the Sublime Text `Packages/User` folder
-* Enable the colour scheme via `Preferences -> Color Scheme -> User`
-
-### Code Font
-
-The code font shown in the screenshot is Menlo.
-
-## Development
-
-Please note, Sublime Text dev builds move quickly and changes can occur with the theme API between releases, so there may be occasions where the theme doesn't quite work with a brand new dev release.
-
-While developing the theme, I have documented some [theme challenges and ideas](https://github.com/buymeasoda/soda-theme/wiki/Theme-challenges-and-ideas) encountered along the way.
-
-## License
-
-Soda Theme is licensed under the [Creative Commons Attribution-ShareAlike 3.0 License](http://creativecommons.org/licenses/by-sa/3.0/). You are free to share and remix the theme, however please abide by the license terms when doing so. 
-
-The following details apply to the Creative Commons license "author specified" components:
-
-* Attribution example: Based on Soda Theme by Ian Hill (http://buymeasoda.com/)
-
-* Naming guidelines: If you create and distribute a derivative theme, please give your theme a unique and original name that does not directly include "Soda Theme" (or a close variant) in the main project title, repo name or Package Control name.
