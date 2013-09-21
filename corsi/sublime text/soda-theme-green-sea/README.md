@@ -17,7 +17,7 @@ Required: [Soda Theme Plugin](http://buymeasoda.github.com/soda-theme/)
 * Find your `Packages` directory using the menu item  `Preferences -> Browse Packages...`
 * Copy the folder into your Sublime Text `Packages/Theme - Soda` directory
 
-### Using Git
+## Using Git
 
 Alternatively, if you are a git user, you can install the theme and keep up to date by cloning the repo directly into your `Packages` directory in the Sublime Text application settings area.
 
@@ -26,13 +26,6 @@ You can locate your Sublime Text `Packages` directory by using the menu item `Pr
 While inside the `Packages/Theme - Soda` directory, clone the theme repository using the command below:
 
     git clone https://github.com/GiuB/soda-theme-green-sea "Soda Dark Green Sea GiuB"
-
-### Download Manually
-
-* Download the files using the GitHub .zip download option
-* Unzip the files and rename the folder to `Theme - Soda`
-* Find your `Packages` directory using the menu item  `Preferences -> Browse Packages...`
-* Copy the folder into your Sublime Text `Packages` directory
 
 ## Activating the theme
 
