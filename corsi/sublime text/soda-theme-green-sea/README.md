@@ -1,6 +1,7 @@
 # Soda Dark Green Sea - by GiuB
 
 GiuB Dark Green Sea customization of standard Soda Dark Theme for Sublime Text 2 / 3.
+
 Ready: Sublime Text 2 / 3, Windows, Linux, Mac, Display retina.
 
 Required: [Soda Theme Plugin](http://buymeasoda.github.com/soda-theme/)
