@@ -8,7 +8,7 @@ Required: [Soda Theme Plugin](http://buymeasoda.github.com/soda-theme/)
 
 ## Soda Dark Green Sea GiuB Design
 
-![Soda Light Theme](http://buymeasoda.github.com/soda-theme/images/screenshots/soda-2-light-theme.png?v=4)
+![Soda Light Theme](http://giub.it/wp-content/uploads/2013/09/soda-dark-green-sea-giub-theme.png)
 
 ## Installation Manually
 
@@ -60,11 +60,13 @@ To configure Sublime Text to use the theme, follow the instructions below for yo
 
 ## Bonus Options
 
-I raccomanded to use the classi Monkai `Color Scheme` or my better Color Scheme customization:
+I raccomanded to use the classic Monkai `Color Scheme` or my better Color Scheme customization:
 
 * Using [Sublime Package Control](http://wbond.net/sublime_packages/package_control)
 * Download [Dayle Rees Color Schemes](https://github.com/daylerees/colour-schemes)
 * Under `Color Scheme` select: `Dayle Rees Color Schemes -> Peacock`
+
+[Peacock - Dayle Ress](https://raw.github.com/daylerees/colour-schemes/master/screenshots/peacock.png)
 
 ## Development
 
