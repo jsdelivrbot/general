@@ -66,7 +66,7 @@ I raccomanded to use the classic Monkai `Color Scheme` or my better Color Scheme
 * Download [Dayle Rees Color Schemes](https://github.com/daylerees/colour-schemes)
 * Under `Color Scheme` select: `Dayle Rees Color Schemes -> Peacock`
 
-[Peacock - Dayle Ress](https://raw.github.com/daylerees/colour-schemes/master/screenshots/peacock.png)
+![Peacock - Dayle Ress](https://raw.github.com/daylerees/colour-schemes/master/screenshots/peacock.png)
 
 ## Development
 
