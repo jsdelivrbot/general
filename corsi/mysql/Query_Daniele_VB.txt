@@ -1,0 +1,811 @@
+SELECT * FROM `orders_products`
+INNER JOIN orders
+ON orders_products.orders_id = orders.orders_id AND orders_products.products_model = 'IT-MS52301';
+
+-------------------------------------------------
+QUERY ULTIMI ORDINI PARTITI
+
+SELECT orders.orders_id, orders.delivery_name, orders.delivery_street_address, orders.delivery_city, orders.delivery_postcode, orders.delivery_state FROM orders
+		INNER JOIN scartati_mail_spedizione_inviata ON
+		scartati_mail_spedizione_inviata.ID = orders.orders_id
+		AND scartati_mail_spedizione_inviata.data_invio > '2012-02-28 00:00:00'
+		AND scartati_mail_spedizione_inviata.data_invio < '2012-03-03 23:59:59'
+		AND orders.annullato = 0
+
+-------------------------------------------------
+QUERY PER PESO PRODOTTI SU BOXDOCCIAIDROMASSAGGIO
+
+SELECT products_model, products_submodel, products_weight, products_weight_im
+FROM products
+INNER JOIN products_to_categories ON products.products_id = products_to_categories.products_id
+WHERE products_status =1
+AND products_to_categories.categories_id =44
+GROUP BY products_model
+LIMIT 0 , 30
+
+
+-------------------------------------------------
+QUERY PER DATA ORDINI SPEDITI IN UN PERIODO
+
+
+SELECT DISTINCT orders.orders_id, orders.customers_name, orders_status_history.date_added
+FROM orders_status_history
+INNER JOIN orders
+ON orders.orders_id = orders_status_history.orders_id
+AND ( orders_status_history.orders_status_id = '3' OR orders_status_history.orders_status_id = '4' )
+AND orders_status_history.date_added > '2012-03-27 00:00:01'
+AND orders_status_history.date_added < '2012-04-12 23:59:59'
+AND orders.annullato = 0
+AND ( orders.orders_status = 3 OR orders.orders_status = 4 )
+AND ( orders.payment_method = "Contrassegno" OR orders.payment_method = "COD" OR orders.payment_method = "Contrassegno (pagamento in contanti alla consegna)" )
+AND ( orders.billing_cf != "" OR orders.billing_piva != "" )
+AND ( orders_status_history.date_added = (
+					  	SELECT DISTINCT MIN(orders_status_history.date_added)
+						FROM orders_status_history
+						WHERE ( orders.orders_id = orders_status_history.orders_id)
+						AND (orders_status_history.orders_status_id = '3' OR orders_status_history.orders_status_id = '4' )
+   					)
+  )
+
+
+
+----------------------------------------------------
+QUERY PER PRENDERE LA DATA DI SPEDIZIONE DI 1 ORDINE
+
+SELECT DISTINCT MIN( date_added )
+FROM orders_status_history
+WHERE orders_id =  '20007'
+AND ( orders_status_id =  '3' OR orders_status_id =  '4')
+LIMIT 0 , 1
+
+----------------------------------------------------
+QUERY PER PRENDERE TUTTI GLI ORDINI SPEDITI DA EBAY NEI PRIMI 4 MESI DEL 2011
+
+SELECT orders.orders_id, orders.customers_name, orders.date_purchased, orders_total.value
+FROM orders INNER JOIN orders_total
+WHERE ( orders.orders_id = orders_total.orders_id AND orders_total.title = 'Totale:' )
+AND ( orders.orders_type_id = 3 OR orders.orders_type_id = 31 OR orders.orders_type_id = 32  )
+AND orders.date_purchased > '2011-01-01 00:00:01' AND orders.date_purchased < '2011-04-30 23:59:59'
+AND ( orders.orders_status = 3 OR orders.orders_status = 4 )
+LIMIT 0,500
+
+Totale fatturato ebay 01-04 2011: 132817.08
+Totale fatturato ebay 01-04 2012: 72412.64
+
+----------------------------------------------------
+QUERY PER PRENDERE TUTTI GLI ORDINI SPEDITI A GIORDANO DI MAGGIO 2012
+
+SELECT orders_products.orders_id, orders.customers_name, orders.date_purchased,
+       orders_products.products_model, orders_products.products_quantity
+FROM orders_products
+INNER JOIN orders
+WHERE ( orders_products.orders_id = orders.orders_id )
+AND orders.date_purchased > '2012-05-01 00:00:01'
+AND orders.date_purchased < '2012-05-30 23:59:59'
+AND orders.customers_name = 'Ferdinando Giordano'
+
+-------------------------------------------------------
+QUERY RISCRITTA PER ORDINAMENTO PER PREZZO
+
+ORIGINALE:
+and p.products_submodel = (SELECT products_submodel FROM products WHERE products_model = p.products_submodel AND products_price_gross = MIN(products_price_gross))";
+
+RISCRITTA:
+and p.products_price_gross = ( SELECT MIN(products_price_gross) FROM products WHERE products_model = 'p.products_submodel )
+
+TEST:
+model: IT-MA50
+SELECT MIN(products_price_gross) FROM products WHERE products_model = 'IT-MA50'
+
+-------------------------------------------------------
+QUERY PER BOXDOCCIAIDRO PER PESO PRODOTTI
+
+SELECT products.products_model, products.products_submodel, CONVERT(products.products_weight_im / 1000, UNSIGNED INTEGER), products_description.products_submodel_desc
+FROM `products`
+INNER JOIN products_to_categories
+ON products_to_categories.products_id = products.products_id
+INNER JOIN products_description
+ON products_description.products_id = products.products_id
+WHERE products_status =1
+AND products_to_categories.categories_id =44
+ORDER BY products.products_model, products.products_price_gross ASC
+LIMIT 0 , 500
+
+-------------------------------------------------------
+QUERY PER BOXDOCCIAIDRO PER PESO SAUNE FINLANDESI
+
+SELECT products.products_model, products.products_submodel, CONVERT(products.products_weight_im / 1000, UNSIGNED INTEGER), products_description.products_submodel_desc
+FROM `products`
+INNER JOIN products_to_categories
+ON products_to_categories.products_id = products.products_id
+INNER JOIN products_description
+ON products_description.products_id = products.products_id
+WHERE products_status =1
+AND (
+	products_to_categories.categories_id = 133 OR
+	products_to_categories.categories_id = 126 OR
+	products_to_categories.categories_id = 128 OR
+	products_to_categories.categories_id = 134 OR
+	products_to_categories.categories_id = 130 OR
+	products_to_categories.categories_id = 131
+    )
+ORDER BY products.products_model, products.products_price_gross ASC
+LIMIT 0 , 500
+
+
+Categorie:	44, 43, 123, 52, 49,
+Categorie-finlandesi: 133, 126, 128, 134, 130, 131
+
+-----------------------------------------------------
+QUERY PER BOXDOCCIAIDRO PER NUOVI DATI PRODOTTI
+
+SELECT products.products_model, products.products_submodel, CONVERT(products.products_weight_im / 1000, UNSIGNED INTEGER), products_description.products_submodel_desc
+FROM `products`
+INNER JOIN products_to_categories
+ON products_to_categories.products_id = products.products_id
+INNER JOIN products_description
+ON products_description.products_id = products.products_id
+WHERE products_status =1
+AND (
+	products_to_categories.categories_id = 133 OR
+	products_to_categories.categories_id = 126 OR
+	products_to_categories.categories_id = 128 OR
+	products_to_categories.categories_id = 134 OR
+	products_to_categories.categories_id = 130 OR
+	products_to_categories.categories_id = 131
+    )
+ORDER BY products_to_categories.products_id, products.products_model, products.products_price_gross ASC
+LIMIT 0 , 500
+
+----------------------------------------------------
+QUERY PER PRENDERE TUTTI GLI ORDINI CHE HANNO ACQUISTATO UNA CANTINETTA DA 12 NEL MAGGIO 2012
+
+SELECT orders_products.orders_id, orders.customers_name, orders.date_purchased,
+       orders_products.products_model, orders_products.products_quantity
+FROM orders_products
+INNER JOIN orders
+WHERE ( orders_products.orders_id = orders.orders_id )
+AND orders.date_purchased > '2012-01-01 00:00:01'
+AND orders.date_purchased < '2012-01-30 23:59:59'
+AND orders_products.products_model = 'I-FV12'
+
+
+----------------------------------------------------
+QUERY PER PRENDERE TUTTI GLI ORDINI ANNULLATI DOPO MAGGIO 2012
+FATTI CON P.IVA O CODICE FISCALE
+
+SELECT orders_id, customers_name, date_purchased
+FROM orders
+WHERE
+    orders.date_purchased > '2012-05-31 23:59:59'
+AND orders.date_purchased < '2012-08-30 00:00:00'
+AND orders.customers_name != 'Daniele Covallero'
+AND annullato = 1
+AND (billing_cf != "" OR billing_piva != "")
+LIMIT 0, 500
+
+-------------------------------------------------------
+QUERY PER AGGIORNARE TUTTI GLI ORDERS.DELIVERY_TELEPHONE
+
+UPDATE orders SET delivery_telephone = customers_telephone
+WHERE delivery_telephone IS NULL
+
+-------------------------------------------------------
+QUERY PER AGGIORNARE TUTTI I CUSTOMERS.PERSONAL_ADDRESS
+
+UPDATE customers SET customers_personal_address_id = customers_default_address_id
+WHERE delivery_telephone IS NULL
+
+----------------------------------------------------
+QUERY PER PRENDERE TUTTI I PRODOTTI NELLA CATEGORIA BENESSERE
+
+SELECT products.products_submodel, products.products_name, products.products_cost, products.products_price, products.products_price * 1.54 FROM `products` INNER JOIN
+
+products_to_categories
+ON products_to_categories.products_id = products.products_id
+WHERE
+
+----------------- BENESSERE -------------------
+
+//Salute e bellezza
+OR products_to_categories.categories_id = 114
+
+//Box doccia
+OR products_to_categories.categories_id = 42
+OR products_to_categories.categories_id = 43
+OR products_to_categories.categories_id = 45
+OR products_to_categories.categories_id = 46
+
+// Saune
+OR products_to_categories.categories_id = 112
+OR products_to_categories.categories_id = 124
+OR products_to_categories.categories_id = 138
+OR products_to_categories.categories_id = 49
+OR products_to_categories.categories_id = 133
+OR products_to_categories.categories_id = 126
+OR products_to_categories.categories_id = 128
+OR products_to_categories.categories_id = 134
+OR products_to_categories.categories_id = 130
+OR products_to_categories.categories_id = 131
+OR products_to_categories.categories_id = 138
+OR products_to_categories.categories_id = 49
+
+//Vasche
+OR products_to_categories.categories_id = 111
+OR products_to_categories.categories_id = 123
+OR products_to_categories.categories_id = 52
+
+//poltrone
+products_to_categories.categories_id = 53
+
+//Lettini chaise longue
+products_to_categories.categories_id = 54
+
+
+----------------- FITNESS -------------------
+
+OR products_to_categories.categories_id = 56
+OR products_to_categories.categories_id = 57
+OR products_to_categories.categories_id = 58
+OR products_to_categories.categories_id = 60
+OR products_to_categories.categories_id = 61
+OR products_to_categories.categories_id = 62
+OR products_to_categories.categories_id = 63
+OR products_to_categories.categories_id = 64
+OR products_to_categories.categories_id = 65
+
+
+----------------- TEMPO LIBERO -------------------
+
+//Microscopi
+OR products_to_categories.categories_id = 119
+
+//Musica
+OR products_to_categories.categories_id = 115
+
+//Accessori per telescopi
+OR products_to_categories.categories_id = 118
+
+//Telescopi
+OR products_to_categories.categories_id = 117
+
+//Visori notturni
+OR products_to_categories.categories_id = 137
+
+//Biliardini e tavoli da Ping pong
+OR products_to_categories.categories_id = 70
+OR products_to_categories.categories_id = 71
+
+//Orologi Multifunzione
+OR products_to_categories.categories_id = 72
+
+
+----------------- ACCESSORI -------------------
+
+//Dischi diamantati
+OR products_to_categories.categories_id = 132
+
+//Gioielli
+OR products_to_categories.categories_id = 121
+
+//Verricelli
+OR products_to_categories.categories_id = 78
+
+//Accessori da Cucina
+OR products_to_categories.categories_id = 79
+
+
+--------------- ARREDAMENTO ------------------
+
+//Biocamini
+OR products_to_categories.categories_id = 136
+
+//Quadri in canvas
+OR products_to_categories.categories_id = 82
+
+//Arredobagno
+OR products_to_categories.categories_id = 83
+
+//Mobiletti PortaTV
+OR products_to_categories.categories_id = 84
+
+
+------------ ELETTRODOMESTICI ----------------
+
+//Trattamento acqua
+OR products_to_categories.categories_id = 135
+OR products_to_categories.categories_id = 87
+OR products_to_categories.categories_id = 88
+
+//Trattamento aria
+OR products_to_categories.categories_id = 90
+OR products_to_categories.categories_id = 91
+
+//Cucina
+OR products_to_categories.categories_id = 107
+OR products_to_categories.categories_id = 96
+
+//Lavatrici e asciugatrici
+OR products_to_categories.categories_id = 98
+
+//Pulizia casa
+OR products_to_categories.categories_id = 100
+OR products_to_categories.categories_id = 102
+
+//Conta monete e Presse da stiro
+OR products_to_categories.categories_id = 104
+OR products_to_categories.categories_id = 105
+
+
+
+
+OR products_to_categories.categories_id =
+OR products_to_categories.categories_id =
+OR products_to_categories.categories_id =
+OR products_to_categories.categories_id =
+OR products_to_categories.categories_id =
+OR products_to_categories.categories_id =
+OR products_to_categories.categories_id =
+
+
+
+
+
+AND products.products_status = 1
+ORDER BY products_to_categories.categories_id
+
+-------------------------------------------------
+QUERY PER PRENDERE TUTTE LE PROSSIME MAIL DI PRENOTAZIONE
+
+SELECT arrivi.products_id, prenotazione_id, email, prenotazione_id,
+       products.products_submodel, products.products_image, nome, products_description.products_name,
+       categories_description.categories_name, products_description.products_submodel_desc, arrivi.data_arrivo,
+       note, prenotazione_type_id
+FROM arrivi
+INNER JOIN prenotazioni ON products_id = arrivi.products_id
+INNER JOIN products ON products_id = products.products_id
+INNER JOIN products_description ON products_description.products_id = products.products_id
+INNER JOIN products_to_categories ON products.products_id = products_to_categories.products_id
+INNER JOIN categories_description ON products_to_categories.categories_id = categories_description.categories_id
+WHERE arrivi.data_arrivo > '2012-08-24 12:00:00'
+AND arrivi.data_arrivo <= '2012-09-24 12:00:00'
+AND data_prenotazione >= '2011-09-24 12:00:00'
+AND stato != '0'
+AND stato != '2'
+AND mail_arrivi IS NULL
+AND tipo != '3'
+AND products.products_status = '1'
+AND products.products_quantity <= 0
+AND email != ''
+ORDER BY arrivi.data_arrivo ASC
+LIMIT 0, 1000
+
+------------------------------------------------
+
+QUERY PER TROVARE TUTTI I PRODOTTI CHE HO ERRONEAMENTE ESCLUSO DA LENGOW
+
+
+SELECT products.products_id, products_model, products_submodel,
+    categories_name, products_name, categories.categories_tree,
+    products_page_description, products_image, products_price_listino, products_description.products_submodel_desc,
+    products_price_gross, products_weight_im, products_status, products_quantity, products_weight, products_to_categories.categories_id
+
+    FROM products INNER JOIN products_description ON products.products_id = products_description.products_id
+    INNER JOIN products_to_categories ON products.products_id = products_to_categories.products_id
+    INNER JOIN categories_description ON products_to_categories.categories_id = categories_description.categories_id
+    INNER JOIN categories ON products_to_categories.categories_id = categories.categories_id
+    WHERE products_to_categories.categories_id > 0 AND products_status = 1
+    AND  (SELECT DISTINCT arrivi.products_id FROM arrivi WHERE arrivi.products_id = products.products_id) IS NULL
+    GROUP BY products_submodel limit 0,1000
+
+
+------------------------------------------------
+
+QUERY PER PRENDERE TUTTI GLI ORDINI CON CODICE SCONTO..
+
+SELECT orders.orders_id, orders_status_history.comments, orders.customers_name, orders.date_purchased, orders_total.value FROM orders
+LEFT JOIN orders_total ON orders_total.orders_id = orders.orders_id
+LEFT JOIN orders_status_history ON orders_status_history.orders_id = orders.orders_id
+WHERE orders.annullato = 0
+AND orders_total.value = (SELECT value FROM orders_total WHERE orders_total.orders_id = orders.orders_id ORDER BY orders_total.orders_total_id DESC LIMIT 0,1)
+AND ( IF(
+            (
+              SELECT value FROM orders_total WHERE title LIKE '%coupon(%' AND orders_id = orders.orders_id ORDER BY orders_total_id DESC
+            ) >0, true, false))
+AND LOWER(orders_status_history.comments) LIKE '%coupon%'
+ORDER BY orders.orders_id DESC
+
+
+------------------------------------------------
+
+ESEMPIO QUERY PER VELOCIZZARE LE'INVIO MAIL PRENOTAZIONI:
+
+Mettere tutte le prenotazioni di questa query con campo mail_arrivi = NULL e poi eseguire questo script (controllando che nel campo nome non sia presente Lifeclass o
+
+"confermato").
+Script in: http://*********
+
+/* Vedi: AND (id prodotto) AND (prenotazioni_id con nome che presenta confermato o lifeclass da togliere) */
+/* Utilizzare la query sottostante per controllare il campo Nome, poi modificare il SELECT lasciando mail_arrivi e mettere tutto a NULL */
+
+SELECT *
+FROM prenotazioni
+WHERE stato !=  '0'
+AND stato !=  '2'
+AND tipo !=  '3'
+AND (
+prenotazione_type_id =1
+OR prenotazione_type_id =2
+)
+AND (
+products_id =  '397'
+OR products_id =  '649'
+OR products_id =  '651'
+OR products_id =  '35'
+)
+AND (
+
+TRUE
+)
+AND email !=  ''
+AND mail_arrivi !=  ''
+AND data_prenotazione >=  '2013-07-01 00:00:00'
+GROUP BY prenotazione_id
+ORDER BY prenotazione_id ASC
+LIMIT 0 , 500
+
+/* Una volta esclusi le prenotazioni da non contattare eseguire l'update della data a NULL secondo questa query */
+
+UPDATE prenotazioni SET mail_arrivi = NULL
+WHERE stato != '0'
+AND stato != '2'
+AND tipo != '3'
+AND (prenotazione_type_id = 1 OR prenotazione_type_id = 2)
+                    AND ( products_id = '649'
+                          OR products_id = '651')
+                    AND ( prenotazione_id != 4373 AND
+                    	  prenotazione_id != 4464 AND
+                    	  prenotazione_id != 4580
+                    	)
+AND email != '' AND mail_arrivi != ''
+AND data_prenotazione >= '2013-01-01 00:00:00'
+
+-------------------------------------------------------------
+
+TROVARE TUTTE LE PRENOTAZIONE DI UN DATO MODELLO PER SPEDIRE MAIL SOLLECITO O SIMILI
+
+SELECT email, nome FROM `prenotazioni` AS p
+INNER JOIN products AS pr ON pr.products_id = p.products_id
+WHERE (pr.products_model = 'it-th20' OR pr.products_model = 'it-th21')
+AND `data_prenotazione` >= '2013-01-01 00:00:00' AND p.email != '' AND (stato != '0' AND stato != '2' AND tipo != '3') AND (prenotazione_type_id = 1 OR
+
+prenotazione_type_id = 2)
+
+-------------------------------------------------------------
+
+TROVARE QUANTO ABBIAMO SPESO A SPEDIRE CON CASSOL IN UN DATO PERIODO
+
+SELECT orders.orders_id,
+orders_status_history.date_added,
+orders.customers_name, orders.customers_company, orders.customers_street_address, orders.customers_city, orders.customers_postcode, orders.customers_telephone,
+
+orders.customers_email_address, orders.billing_street_address, orders.billing_city, orders.billing_postcode,
+orders.corriere,
+orders.shipping_cost, orders.shipping_price, orders.orders_subtotal FROM `orders`
+LEFT JOIN orders_status_history ON orders_status_history.orders_id = orders.orders_id
+WHERE
+orders_status_history.date_added > '2013-01-01 00:00:01'
+AND orders_status_history.date_added < '2013-01-31 23:59:59'
+AND  (orders_status_history.orders_status_id = 3 OR orders_status_history.orders_status_id = 4)
+AND orders.annullato = 0
+AND orders.corriere = 'Cassol'
+GROUP BY orders.orders_id
+ORDER BY orders_status_history.date_added DESC
+
+
+-------------------------------------------------------------
+
+TROVARE I DATI DEGLI ULTIMI PRODOTTI AGGIUNTI
+
+SELECT products_submodel, pd.products_name, cd.categories_name, products_price_gross, products_date_added, products_status
+FROM products AS p
+LEFT JOIN products_description AS pd ON p.products_id = pd.products_id
+LEFT JOIN products_to_categories AS   ptc ON ptc.products_id = p.products_id
+LEFT JOIN categories  AS c ON c.categories_id = ptc.categories_id
+LEFT JOIN categories_description AS cd  ON   cd.categories_id = c.categories_id
+WHERE products_status = 1 AND
+products_date_added >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+
+
+---------------------------------------------------
+
+QUERY REPORT PER RICAMBI DANIEL
+
+SELECT replacement_id AS id_ricambio, insert_date AS data_inserimento, orders_id AS id_ordine, replacement_damanged AS codice_danneggiato, CONCAT_WS(replacement_name,
+
+replacement_name_two) AS descrizione, payment_method AS metodo_pagamento, replacement_cost AS costo_ricambio, replacement_final_price AS prezzo_vendita_ricambio,
+
+replacement_time AS tempo_gestione_ricambio, IF(replacement_damanged = 'I-MG02', replacement_comments, '') AS commenti
+FROM replacements
+WHERE insert_date >= '2013-01-01'
+AND replacement_status NOT LIKE '%Cancella%'
+AND visible = 1
+AND type = 'Ricambio'
+ORDER BY insert_date ASC
+LIMIT 0, 1000
+
+
+---------------------------------------------------------------
+
+TABELLA PREZZI PRODOTTI BENESSERE
+
+SELECT products.products_id AS ID, cd.categories_name AS categoria, products_model AS modello, products_submodel AS versione, products_cost AS costo, products_price AS
+
+prezzo_deivato, products_price_gross AS prezzo_ivato, CONCAT(pd.products_name, " ", pd.products_submodel_desc) AS nome_prodotto
+FROM products AS p
+INNER JOIN products_to_categories AS ptc ON ptc.products_id = products.products_id
+INNER JOIN products_description AS pd ON pd.products_id = products.products_id
+INNER JOIN categories AS c ON c.categories_id = ptc.categories_id
+INNER JOIN categories_description AS cd ON cd.categories_id = c.categories_id
+WHERE products_status = 1 AND c.categories_tree LIKE '%;41;%'
+ORDER BY cd.categories_name ASC, products.products_model ASC, products.products_price_gross ASC
+
+
+---------------------------------------------------------------
+
+QUERY PER TROVARE GLI ORDINI CON PUNTI DA ATTRIBUIRE A CLIENTI VACANZA PIU'
+
+SELECT orders.orders_id AS ordine, ot.value AS punti, cd.card_vp_code AS codice_vp, cd.card_vp_barcode AS codice_barre_vp, cd.card_vp_orders AS ordini_vp,
+
+cd.card_vp_data_activation AS data_attivazione, cd.card_vp_nome AS nome, cd.card_vp_cognome AS cognome, cd.card_vp_sex AS sesso, cd.card_vp_date_nascita AS
+
+data_nascita, cd.card_vp_indirizzo AS indirizzo, cd.card_vp_citta AS citta, cd.card_vp_cap AS CAP, cd.card_vp_tel AS tel, cd.card_vp_regione AS regione,
+
+cd.card_vp_provincia AS provincia, cd.card_vp_email AS email, cd.card_vp_consensi AS consensi
+FROM orders
+INNER JOIN customers AS c ON c.customers_id = orders.customers_id
+INNER JOIN card_vp AS cd ON cd.card_vp_code = c.customers_vacanza_piu
+INNER JOIN orders_total AS ot ON ot.orders_id = orders.orders_id
+WHERE orders.annullato = 0 AND (orders.orders_status = 3 OR orders.orders_status = 4)
+AND cd.card_vp_active = '1'
+AND (orders.orders_type_id = 1 OR orders.orders_type_id = 2 OR orders.orders_type_id = 31 OR orders.orders_type_id = 32 OR orders.orders_type_id = 400) AND
+
+cd.card_vp_orders NOT LIKE CONCAT('%', orders.orders_id, '%') AND ot.class = 'ot_subtotal'
+
+
+-----------------------------------------------------------------
+
+QUERY PER PRENDERE EMAIL E NOME DI CHI HA ACQUISTATO PRODOTTI DI UNA DATA CATEGORIA
+
+SELECT orders.customers_email_address AS email, cu.customers_firstname AS nome
+FROM orders_products AS op
+INNER JOIN orders ON op.orders_id = orders.orders_id
+INNER JOIN customers AS cu ON cu.customers_id = orders.customers_id
+INNER JOIN products_to_categories AS ptc ON ptc.products_id = op.products_id
+INNER JOIN categories AS c ON c.categories_id = ptc.categories_id
+WHERE (orders.orders_type_id = 1 OR orders.orders_type_id = 2 OR orders.orders_type_id = 31 OR orders.orders_type_id = 32 OR orders.orders_type_id = 400 OR
+
+orders.orders_type_id = 404 OR orders.orders_type_id = 3) AND c.categories_id = '87'
+GROUP BY orders.customers_email_address
+
+
+------------------------------------------------------------------
+
+QUERY PER PRENDERE GLI ACQUISTI WEB DI SAUNE
+
+SELECT orders_products.orders_id AS ordine, orders_products.products_model AS versione_prodotto, orders.orders_subtotal AS Subtotal, orders.payment_method AS
+
+pagamento, orders.annullato AS annullato
+FROM orders_products
+INNER JOIN orders ON orders.orders_id = orders_products.orders_id
+INNER JOIN products_to_categories AS ptc ON ptc.products_id = orders_products.products_id
+INNER JOIN categories AS c ON c.categories_id = ptc.categories_id
+WHERE  orders.date_purchased >= '2013-01-01 00:00:00'
+AND orders.date_purchased <= '2013-07-31 23:59:59'
+AND orders.orders_type_id = '2'
+AND (c.categories_tree LIKE '%;124;%' OR c.categories_tree LIKE '%;49;%')
+ORDER BY orders_products.orders_id DESC
+
+-------------------------------------------------------------------
+
+ESCLUDERE CHI HA ACQUISTATO DI RECENTE DA MAIL DI MASSA O CHE NON HA PORTATO A TERMINE ORDINE
+
+SELECT customers_email_address, customers_name
+FROM `orders`
+WHERE date_purchased >= '2013-07-01 00:00:00' AND (date_purchased >= '2013-06-01 00:00:00' AND orders_status != 4)
+AND (orders.orders_type_id = 1 OR orders.orders_type_id = 2 OR orders.orders_type_id = 31 OR orders.orders_type_id = 32 OR orders.orders_type_id = 400)
+AND customers_email_address != ''
+GROUP BY customers_email_address
+
+-------------------------------------------------------------------
+
+ESCLUDERE CHI HA PRENOTATO DI RECENTE DA MAIL DI MASSA
+
+SELECT email, nome
+FROM `prenotazioni`
+WHERE `data_prenotazione` >= '2013-06-01 00:00:00' OR (`data_prenotazione` >= '2013-05-01 00:00:00' AND stato != 2) AND (prenotazione_type_id = 1 OR
+
+prenotazione_type_id = 2) AND email != '' GROUP BY email
+
+-------------------------------------------------------------------
+
+REPORT ACQUISTI CON CARTA DI CREDITO 2013
+
+SET @tentativi := 0, @successi := 0, @insuccessi := 0, @tot := 0, @totale_perso := 0, @tot_tentativi := 0, @n_temp := 0, @n_persi := 0, @tmp_order := 0;
+SELECT o1.orders_id AS id_ordine, DATE_FORMAT(date_purchased,'%m/%d/%Y') AS data, customers_name AS cliente, (@tentativi := (SELECT COUNT( * ) FROM orders AS o2 WHERE
+
+o2.customers_id = o1.customers_id AND (o2.date_purchased >= (o1.date_purchased + interval 3 day) OR o2.date_purchased >= (o1.date_purchased - interval 3 day) ))) AS
+
+stima_tentativi,
+(@successi := (SELECT COUNT( * ) FROM orders AS o2 WHERE o2.customers_id = o1.customers_id AND (o2.date_purchased >= (o1.date_purchased + interval 3 day) OR
+
+o2.date_purchased >= (o1.date_purchased - interval 3 day)) AND o2.annullato = 0)) AS successi,
+(@insuccessi := (SELECT COUNT( * ) FROM orders AS o2 WHERE o2.customers_id = o1.customers_id AND (o2.date_purchased >= (o1.date_purchased + interval 3 day) OR
+
+o2.date_purchased >= (o1.date_purchased - interval 3 day)) AND o2.annullato = 1)) AS insuccessi,
+(@tot := ot1.value) AS totale_stimato,
+IF(@successi = 1 AND @insuccessi = 0, 'ok', (IF(@successi > 1, 'stima poco attendibile', IF(@successi = 0, 'Ordine Perso', IF(@insuccessi > 3, 'Troppi insuccessi
+
+(>3)', ''))))) AS report
+/*
+IF(@successi = 0, @totale_perso := @totale_perso + @tot, '') AS totale_perso_SUM,
+IF(@successi = 0, @n_persi := @n_persi + 1, '') AS ordini_persi_SUM,
+IF(@tmp_order != o1.orders_id, (@tot_tentativi := @tot_tentativi + @tentativi) / (@n_temp := @n_temp +1), '') AS stima_media_tentativi_SUM,
+(@tmp_order := o1.orders_id) AS tmp_order*/
+FROM orders AS o1
+INNER JOIN orders_total AS ot1 ON ot1.orders_id = o1.orders_id
+WHERE
+payment_method LIKE '%carta di credito%'
+AND date_purchased > '2012-01-01 00:00:00'
+AND ot1.class = 'ot_total'
+GROUP BY customers_id
+ORDER BY o1.orders_id ASC
+LIMIT 0,10000
+
+-------------------------------------------------------------------
+
+REPORT ZONE DI ACQUISTO PRODOTTI 2013
+
+/* Prova 1 */
+SELECT cap.regione AS regione, cap.cap AS cap, op.products_model AS codice_prodotto, op.final_price * op.products_quantity AS stima_totale_ricavi, SUM
+
+(op.products_quantity) AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato = 0
+AND o.orders_type_id = 1
+AND o.orders_id = '30525'
+GROUP BY op.products_model
+ORDER BY cap.regione ASC, cap.cap ASC
+LIMIT 0,2
+
+/* Prova 2 */
+SELECT cap.regione AS regione, cap.cap AS cap, op.products_model AS codice_prodotto, op.final_price * op.products_quantity AS stima_totale_ricavi, SUM
+
+(op.products_quantity) AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato = 0
+AND o.orders_type_id = 1
+AND o.orders_id = '30525'
+GROUP BY op.products_model
+ORDER BY cap.regione ASC, cap.cap ASC
+LIMIT 0,2
+
+/* Prova 3 */
+SET @p_quantity := 0;
+SELECT cap.regione AS regione, cap.comune AS comune, o.customers_postcode AS cap, op.products_model AS codice_prodotto, (SELECT products_price_gross FROM products AS
+
+p1 WHERE p1.products_submodel = op.products_model ORDER BY products_status DESC LIMIT 0,1) * (@p_quantity := (	SELECT SUM(op1.products_quantity)
+	FROM orders_products AS op1
+	INNER JOIN orders AS o1 ON o1.orders_id = op1.orders_id
+	WHERE o1.customers_postcode = o.customers_postcode
+	AND op1.products_model = op.products_model
+	AND o1.annullato =0
+)) AS sommatoria_prezzo_vendita_prodotti_ivato, @p_quantity AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato =0
+AND o.orders_type_id =1
+AND o.customers_postcode = '23030'
+GROUP BY op.products_model
+ORDER BY cap.regione ASC , o.customers_postcode ASC
+
+
+/* Prova 4 */
+SELECT cap.regione AS regione, cap.cap AS cap, op.products_model AS codice_prodotto, op.final_price * op.products_quantity AS stima_totale_ricavi, SUM
+
+(op.products_quantity) AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato = 0
+AND o.orders_type_id = 1
+//AND o.orders_id = '30525'
+AND op.products_model = 'V-620-P'
+GROUP BY op.products_model
+ORDER BY cap.regione ASC, cap.cap ASC
+LIMIT 0,2
+
+/* Prova 5 - Accettata e lanciata  (Stima: 3 secondi per 14000 CAP) */
+SET @p_quantity := 0;
+SELECT cap.regione AS regione, cap.comune AS comune, o.customers_postcode AS cap, op.products_model AS codice_prodotto, (@p_quantity := (	SELECT SUM
+
+(op1.products_quantity)
+	FROM orders_products AS op1
+	INNER JOIN orders AS o1 ON o1.orders_id = op1.orders_id
+	WHERE o1.customers_postcode = o.customers_postcode
+	AND op1.products_model = op.products_model
+	AND o1.annullato =0
+)) AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato =0
+/* AND o.customers_postcode = '23030' */
+GROUP BY op.products_model
+ORDER BY cap.regione ASC , o.customers_postcode ASC
+
+/* PROVA 6 */
+SET @p_quantity := 0;
+SELECT cap.regione AS regione, cap.comune AS comune, o.customers_postcode AS cap, op.products_model AS codice_prodotto, (@p_quantity := (	SELECT SUM
+
+(op1.products_quantity)
+	FROM orders_products AS op1
+	INNER JOIN orders AS o1 ON o1.orders_id = op1.orders_id
+	WHERE o1.customers_postcode = o.customers_postcode
+	AND op1.products_model = op.products_model
+	AND o1.annullato =0
+)) AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato =0
+AND o.customers_postcode = '23030'
+GROUP BY op.products_model
+ORDER BY cap.regione ASC , o.customers_postcode ASC
+INTO OUTFILE '/srv/www/store360/html/pub1/public/orders-cap.csv'
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+
+/* PROVA 7 - CORRETTA */
+SET @p_quantity := 0;
+INSERT INTO vendite_regione (vendita_id, regione, comune, cap, codice_prodotto, n_vendite)
+SELECT '' AS vendita_id, cap.regione AS regione, cap.comune AS comune, o.customers_postcode AS cap, op.products_model AS codice_prodotto, (@p_quantity := (	SELECT
+
+SUM(op1.products_quantity)
+	FROM orders_products AS op1
+	INNER JOIN orders AS o1 ON o1.orders_id = op1.orders_id
+	WHERE o1.customers_postcode = o.customers_postcode
+	AND op1.products_model = op.products_model
+	AND o1.annullato =0
+)) AS n_vendite
+FROM orders AS o
+INNER JOIN s_cap AS cap ON cap.cap = o.customers_postcode
+INNER JOIN orders_products AS op ON o.orders_id = op.orders_id
+WHERE o.annullato =0
+GROUP BY cap, op.products_model
+ORDER BY cap.regione ASC , o.customers_postcode ASC
+
+/* Inserimento CAP mancanti, NON UTILIZZARE TANTI CAP SONO INSERITI ERRATI! */
+SELECT '' AS id_cap, UPPER(o.customers_city AS comune), o.customers_postcode AS cap
+FROM orders AS o
+WHERE customers_postcode NOT IN (SELECT c1.cap FROM s_cap AS c1)
+AND o.customers_city LIKE (SELECT c2.comune FROM s_cap AS c2 WHERE c2.comune LIKE CONCAT('%', o.customers_city, '%')  LIMIT 0,1)
+GROUP BY o.customers_postcode
+
+/* PROVA RAGGRUPPAMENTO PER REGIONE */
+SET @p_quantity := 0;
+SELECT '' AS vendita_id, vr.regione AS regione, vr.cap AS cap, vr.codice_prodotto AS codice_prodotto, (@p_quantity := (
+ SELECT SUM(vr1.n_vendite)
+	FROM vendite_regione AS vr1
+	WHERE vr1.codice_prodotto = vr.codice_prodotto
+	AND vr1.regione = vr.regione
+)) AS n_vendite
+FROM vendite_regione AS vr
+GROUP BY vr.regione, vr.codice_prodotto
+ORDER BY regione, codice_prodotto
