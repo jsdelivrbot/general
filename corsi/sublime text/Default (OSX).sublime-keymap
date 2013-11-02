@@ -1,0 +1,22 @@
+[
+	/*
+	| ------------------
+	| GiuB Start Config
+	| ------------------
+	*/
+
+		{ "keys": ["super+w"], "command": "toggle_side_bar" },
+		{ "keys": ["super+shift+down"], "command": "lower_case" },
+		{ "keys": ["super+shift+up"], "command": "upper_case" },
+		{ "keys": ["super+ctrl+u"], "command": "sftp_upload_file" },
+		{ "keys": ["super+ctrl+s"], "command": "sftp_show_panel" },
+		{ "keys": ["super+ctrl+x"], "command": "sftp_cancel_upload" },
+		{ "keys": ["super+shift+t"], "command": "delete_trailing_spaces" },
+		{ "keys": ["super+j"], "command": "join_lines" }
+
+	/*
+	| ------------------
+	|  GiuB END Config
+	| ------------------
+	*/
+]
