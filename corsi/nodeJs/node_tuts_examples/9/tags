@@ -1,0 +1,22 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+fakeData	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/7/test.js	/^var fakeData = require('.\/index.js');$/;"	v	language:JavaScript
+fakeData.namesData	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/7/index.js	/^  namesData: require('.\/data\/names.json'),$/;"	p	language:JavaScript
+fakeData.namesData	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/8/index.js	/^  namesData: require('.\/data\/names.json'),$/;"	p	language:JavaScript
+fakeData.namesData	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/index.js	/^  namesData: require('.\/data\/names.json'),$/;"	p	language:JavaScript
+getters	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/getters.js	/^var getters = function(fakeData) {$/;"	f	language:JavaScript
+getters	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/index.js	/^var getters = require('.\/getters.js');$/;"	v	language:JavaScript
+names	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/7/test.js	/^var names = fakeData.names(5);$/;"	v	language:JavaScript
+obj	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/obj.js	/^var obj = function(count, options) {$/;"	f	language:JavaScript
+result	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/7/index.js	/^    var result = [];$/;"	v	language:JavaScript
+result	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/7/result.js	/^    var result = [];$/;"	v	language:JavaScript
+result	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/8/index.js	/^    var result = [];$/;"	v	language:JavaScript
+_	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/7/index.js	/^var _ = require('underscore');$/;"	v	language:JavaScript
+_	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/8/index.js	/^var _ = require('underscore');$/;"	v	language:JavaScript
+_	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/getters.js	/^var _ = require('underscore');$/;"	v	language:JavaScript
+_	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/index.js	/^var _ = require('underscore');$/;"	v	language:JavaScript
+_	/Users/jackfranklin/Dropbox/writingandtalks/nettuts/nodemodules/9/obj.js	/^var _ = require('underscore');$/;"	v	language:JavaScript

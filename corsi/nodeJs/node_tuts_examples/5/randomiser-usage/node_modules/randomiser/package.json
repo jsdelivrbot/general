@@ -1,0 +1,14 @@
+{
+  "name": "randomiser",
+  "version": "0.0.0",
+  "description": "gives you random numbers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jack Franklin",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "underscore": "~1.5.2"
+  }
+}
