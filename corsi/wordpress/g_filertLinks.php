@@ -10,6 +10,12 @@ Author URI: http://giub.it
 License: GPLv2 or later
 */
 
+/*
+Descrizione:
+Aggiungere a $filer_urls gli URL da filtrare e sostituire dai post
+con un link che invita a loggarsi per vedere tale link
+*/
+
 global $filer_urls, $replace_link;
 
 //Aggiungere qui i link da togliere
