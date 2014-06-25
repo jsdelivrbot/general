@@ -1,0 +1,199 @@
+<<<<<<< HEAD
+SEO: Guida definitiva 2014
+
+Perchè è importante un sito Ottimizzato SEO?
+Un click dalle SERP di google converte l'800% meglio di un click a pagamento su Adwords
+
+Avvertenza:
+La seguente guida mostra dati molto specifici, ovviamente vanno interpretati in base al vostro settore di interesse e al periodo storico.
+
+Strumenti di base:
+Analitycs, WebmasterTools
+
+Analisi del rank sito:
+http://suite.searchmetrics.com/en/research?acc=0&url=gtec-power.eu&cc=IT
+
+Attività di base per sistemare il sito:
+- Usate un "Char counter" per ottimizzare title / description nelle SERP: http://www.javascriptkit.com/script/script2/charcount.shtml
+- Title [Ottimizzato in base alle kwywords - 40/70 Char - Google tronca a 57] @Keyword all'inizio
+- Description [Emozionale 120 - 150 Char] @Keyword all'inizio
+- Keywords [Praticamente inutili]
+- URL [importante, spazi "-", "tutto minuscolo", le keyword nell'url sono fondamentali]
+- La struttura di navigazione nel sito è fondamentale, deve essere molto sensata e ben classificata
+- Mettere il meta noindex,nofollow per le pagine di ricerca e pagine che non sono utili per il posizionamento [oppure usare il robots.txt]
+- Seguire al meglio i richsnippets: https://support.google.com/webmasters/topic/21997?hl=en
+
+Suggerimenti HTML in generale:
+- Usare molto l'anchor text che riporti le keyword per le quali si vuole ottimizzare l'URL riportanto nell'href
+- Seguire un andamento dei titoli: h1, h2, h3 ... h6 mantenendoli unici e limitando le ripetizioni (google non è più sensibile come una volta su questo)
+- Usare l'attributo alt="descrizione immagine" per posizionare l'immagine su google immagini
+- Usare l'attributo rel="nofollow" in tutti i link che puntano esternamente al sito e tutti gli URL interni che non sono di reale interesse e impatto per il posizionamento, così da non perdere % di rank dove non serve (Es: pagine tipo "acquisti sicuri", "procedure per il reso prodotti", "detrazioni").
+
+## Fondamentale è lo studio delle Keyword: 
+
+Strumenti per trovare nuove keywords:
+1. Cercare le keyword migliori per posizionarsi su: https://adwords.google.com/ko/KeywordPlanner
+2. Se il sito è nuovo o è ancora poco ottimizzato è meglio cercare keyword che puntano sulla coda lunga (3-4-5 parole consecutive).
+Esempio sbagliato: "box doccia"
+Esempio corretto: "Vendita online box doccia"
+3. Utilizzare un foglio di calcolo come questo per selezionare e ricordare le keyword strategiche: https://docs.google.com/spreadsheets/d/1tERkq2ijPfsaq2PUHP1ksC-eFELT5qPSygWTaR3HkNI/edit?usp=sharing
+4. Se il sito ha poco rank o la categoria che si sta "rankando" non è strettamente inerente a ciò che tratta il sito conviene puntare su una keyword-difficulty molto bassa altrimenti le pagine ottimizzate non si posizioneranno mai.
+Eseguire il check della keyword difficulty creando un account (anche free) su SEO MOZ e usare: https://moz.com/researchtools/keyword-difficulty
+5. Create una lunghissima lista di keyword su cui lavorare e puntatevi sui risultati migliori per "Efficienza" o "Efficienza / Posizionamento"
+6. Utilizzate il successivo capitolo di questa guida "Strumenti Analisi del posizionamento" per aggiungere le keyword su cui siete già posizionati alla lista.
+7. Richiedete la creazione di pagine ottimizzate a copywriter esterni, esempio: http://www.melascrivi.com/
+8. Prima di pubblicare, in base alla vostra strategia, i contenuti ottimizzati SEO prevedete di usare il tag <strong> sulle parole pincipali e su quelle fondamentali usate il tag link con l'anchor-text ottimizzato (in alcuni casi mettete anche il title ma non sempre).
+
+Strumenti per analizzare il vostro posizionamento nelle SERP:
+1. Analitycs: Acquisizione -> Parole chiave -> Risultati organici [purtroppo moltissimi sono "not-provided"]
+2. WebmasterTools: Traffico di ricerca -> Query di ricerca [controllate anche l'URL posizionato su "Pagine Principali"]
+3. Controllare direttamente su google utilizzando l'attributo "pws=0" [Per ottenere il posizionamento reale, togliendo la geolocalizzazione e i vostri cookie] Es: https://www.google.it/search?q=termine+di+ricerca&hl=it&num=50&start=0&sa=N&pws=0
+4. Per Windows usare Free monitor for google: http://www.cleverstat.com/en/google-monitor-query.htm
+5. Per Chrome: SEO SERP Workbench
+
+Trovare le eventuali penalizzazioni / errori SEO del sito:
+1. Controllate di non aver posizionato pagine inutili che causano dispersione del rank su google [Controllate direttamente su google scrivendo site:www.sito.com] oppure: WebmasterTools -> Indice Google -> Stato dell'indicizzazione
+2. Controllate che il file robots.txt non stia bloccando gli spider [in tal caso trovate anche un alert su Webmastertools]
+3. Mantenete al minimo il numero di errori 404. Vedi su: WebmasterTools -> Scansione -> Errori di scansione
+4. Tutti i title / description di tutte le pagine devono essere unici, suggerimenti su: WebmasterTools -> Aspetto nella ricerca -> Miglioramenti HTML
+5. Controllate di non ricevere backlink da troppi siti di SPAM [google penalizza in rari casi es: backlink da siti porno]
+6. Controllate che il sito sia veloce a sufficienza (sotto i 800-600ms) WebmasterTools -> Scansione -> Statistiche di scansione [Tempo trascorso per il download ...]
+7. I contenuti del vostro sito devono essere UNICI, controllate eventuali contenuti duplicati con questo tool: http://www.siteliner.com/
+8. Per spostare gli URL vecchi non usare il classico redirect ma il redirect 301 [lo standard è 302: redirect temporaneo]
+
+Spider e strumenti per tenere sotto controllo il sito:
+1. Visual SEO Studio: http://visual-seo.com/
+E' un software freeware e davvero potente!
+2. XENU: http://home.snafu.de/tilman/xenulink.html
+Trova i link 404 e controlla i link interni errati del vostro sito.
+
+
+Strategie avanzate:
+1. Inserire testi descrittivi per ogni categoria del sito (prima [200 parole] o dopo [600 parole] del vostro normale contenuto della navigazione) [le pagine di categoria per siti B2C e B2B convertono molto meglio]
+2. Creare delle landing-page ottimizzate apposta per spingere certe keyword [pagine prive del template classico del sito così da non perdere rank]
+3. Creare una serie di pagine informative sui vostri prodotti / servizi interne al sito che si linkano tra di loro, ricche di testo [minimo 600 parole] con i tag principali tutti ottimizzati per una certa keyword.
+4. Utilizzare molto i social: Facebook + Google regnano, è importante ottenere molti "share", i Social Media Manager migliori inducono la condivisione postando "cavolate divertenti".
+5. Backlink puliti: Chiedete ai collaboratori di creare un post nel loro sito che linka al vostro [correlato da testo e keywords sensate] o chiedete / pagate un banner in tutte le pagine del loro sito [specie per metterlo nella loro homepage].
+6. Backlink sporchi: Cercate su google siti che trattano il vostro settore di interesse e postate commenti con dei backlink al vostro sito.
+Potete inoltre scaricare il mio file con tutte le webdirectories / siti di artcle marketing per postare backlink [Attenzione!  E' una lista generica, puntate SOLO ai backlink di qualità!]
+
+Monitorate l'attività dei vostri competitors:
+1. Monitorate i backlink off-site con questo tool: http://www.backlinkwatch.com/index.php [Riporta fino a 1000 backlink]
+
+Estensioni per Chrome:
+1. PageRank Status: https://chrome.google.com/webstore/detail/pagerank-status/hbdkkfheckcdppiaiabobmennhijkknn?hl=it
+E' sempre importante conosce il rank di altri siti per capire quanto "rank" passano ai link off-site / backlink e relativa affluenza
+2. Meta SEO Inspector: https://chrome.google.com/webstore/detail/meta-seo-inspector/ibkclpciafdglkjkcibmohobjkcfkaef
+Da una veloce panoramica dei tag di base e suggerisce cosa non va bene. Inoltre su Windows fa un hilight di tutti i link "nofollow"
+3. Wappalyzer: https://chrome.google.com/webstore/detail/wappalyzer/gppongmhjkpfnbhagpmjfkannfbllamg
+Molto apprezzato dai developer, mostra in real time tutti i plugin / CMS / tipo di server che utilizza il sito che si sta guardando.
+
+Ottimizzazione avanzata per developer:
+1. Velocità: E' un fattore estremamente importante, usate un buon server vicino alla vostra località, DNS veloci e trovate un plugin per gestire le pagine del sito in cache (vedi mio articolo + varnish cache: https://www.varnish-cache.org/), una buona velocità del sito deve stare sotto i 800-600ms.
+
+Tenersi aggiornati sugli aggiornamenti in campo SEO e chiedere consigli:
+1. Blog: http://blog.tagliaerbe.com/
+2. Webinar: http://www.gtmasterclub.it/eventi/2014
+3. Consigli: http://www.giorgiotave.it/forum/
+
+Per crescere nelle SERP il segreto è: Ottimizzare tutto e ... continuare ad aggiornare il sito xD
+=======
+SEO: Guida definitiva 2014
+
+Perchè è importante un sito Ottimizzato SEO?
+Un click dalle SERP di google converte l'800% meglio di un click a pagamento su Adwords
+
+Avvertenza:
+La seguente guida mostra dati molto specifici, ovviamente vanno interpretati in base al vostro settore di interesse e al periodo storico.
+
+Strumenti di base:
+Analitycs, WebmasterTools
+
+Analisi del rank sito:
+http://suite.searchmetrics.com/en/research?acc=0&url=gtec-power.eu&cc=IT
+
+Attività di base per sistemare il sito:
+- Usate un "Char counter" per ottimizzare title / description nelle SERP: http://www.javascriptkit.com/script/script2/charcount.shtml
+- Title [Ottimizzato in base alle kwywords - 40/70 Char - Google tronca a 57] @Keyword all'inizio
+- Description [Emozionale 120 - 150 Char] @Keyword all'inizio
+- Keywords [Praticamente inutili]
+- URL [importante, spazi "-", "tutto minuscolo", le keyword nell'url sono fondamentali]
+- La struttura di navigazione nel sito è fondamentale, deve essere molto sensata e ben classificata
+- Mettere il meta noindex,nofollow per le pagine di ricerca e pagine che non sono utili per il posizionamento [oppure usare il robots.txt]
+- Seguire al meglio i richsnippets: https://support.google.com/webmasters/topic/21997?hl=en
+
+Suggerimenti HTML in generale:
+- Usare molto l'anchor text che riporti le keyword per le quali si vuole ottimizzare l'URL riportanto nell'href
+- Seguire un andamento dei titoli: h1, h2, h3 ... h6 mantenendoli unici e limitando le ripetizioni (google non è più sensibile come una volta su questo)
+- Usare l'attributo alt="descrizione immagine" per posizionare l'immagine su google immagini
+- Usare l'attributo rel="nofollow" in tutti i link che puntano esternamente al sito e tutti gli URL interni che non sono di reale interesse e impatto per il posizionamento, così da non perdere % di rank dove non serve (Es: pagine tipo "acquisti sicuri", "procedure per il reso prodotti", "detrazioni").
+
+## Fondamentale è lo studio delle Keyword: 
+
+Strumenti per trovare nuove keywords:
+1. Cercare le keyword migliori per posizionarsi su: https://adwords.google.com/ko/KeywordPlanner
+2. Se il sito è nuovo o è ancora poco ottimizzato è meglio cercare keyword che puntano sulla coda lunga (3-4-5 parole consecutive).
+Esempio sbagliato: "box doccia"
+Esempio corretto: "Vendita online box doccia"
+3. Utilizzare un foglio di calcolo come questo per selezionare e ricordare le keyword strategiche: https://docs.google.com/spreadsheets/d/1tERkq2ijPfsaq2PUHP1ksC-eFELT5qPSygWTaR3HkNI/edit?usp=sharing
+4. Se il sito ha poco rank o la categoria che si sta "rankando" non è strettamente inerente a ciò che tratta il sito conviene puntare su una keyword-difficulty molto bassa altrimenti le pagine ottimizzate non si posizioneranno mai.
+Eseguire il check della keyword difficulty creando un account (anche free) su SEO MOZ e usare: https://moz.com/researchtools/keyword-difficulty
+5. Create una lunghissima lista di keyword su cui lavorare e puntatevi sui risultati migliori per "Efficienza" o "Efficienza / Posizionamento"
+6. Utilizzate il successivo capitolo di questa guida "Strumenti Analisi del posizionamento" per aggiungere le keyword su cui siete già posizionati alla lista.
+7. Richiedete la creazione di pagine ottimizzate a copywriter esterni, esempio: http://www.melascrivi.com/
+8. Prima di pubblicare, in base alla vostra strategia, i contenuti ottimizzati SEO prevedete di usare il tag <strong> sulle parole pincipali e su quelle fondamentali usate il tag link con l'anchor-text ottimizzato (in alcuni casi mettete anche il title ma non sempre).
+
+Strumenti per analizzare il vostro posizionamento nelle SERP:
+1. Analitycs: Acquisizione -> Parole chiave -> Risultati organici [purtroppo moltissimi sono "not-provided"]
+2. WebmasterTools: Traffico di ricerca -> Query di ricerca [controllate anche l'URL posizionato su "Pagine Principali"]
+3. Controllare direttamente su google utilizzando l'attributo "pws=0" [Per ottenere il posizionamento reale, togliendo la geolocalizzazione e i vostri cookie] Es: https://www.google.it/search?q=termine+di+ricerca&hl=it&num=50&start=0&sa=N&pws=0
+4. Per Windows usare Free monitor for google: http://www.cleverstat.com/en/google-monitor-query.htm
+5. Per Chrome: SEO SERP Workbench
+
+Trovare le eventuali penalizzazioni / errori SEO del sito:
+1. Controllate di non aver posizionato pagine inutili che causano dispersione del rank su google [Controllate direttamente su google scrivendo site:www.sito.com] oppure: WebmasterTools -> Indice Google -> Stato dell'indicizzazione
+2. Controllate che il file robots.txt non stia bloccando gli spider [in tal caso trovate anche un alert su Webmastertools]
+3. Mantenete al minimo il numero di errori 404. Vedi su: WebmasterTools -> Scansione -> Errori di scansione
+4. Tutti i title / description di tutte le pagine devono essere unici, suggerimenti su: WebmasterTools -> Aspetto nella ricerca -> Miglioramenti HTML
+5. Controllate di non ricevere backlink da troppi siti di SPAM [google penalizza in rari casi es: backlink da siti porno]
+6. Controllate che il sito sia veloce a sufficienza (sotto i 800-600ms) WebmasterTools -> Scansione -> Statistiche di scansione [Tempo trascorso per il download ...]
+7. I contenuti del vostro sito devono essere UNICI, controllate eventuali contenuti duplicati con questo tool: http://www.siteliner.com/
+8. Per spostare gli URL vecchi non usare il classico redirect ma il redirect 301 [lo standard è 302: redirect temporaneo]
+
+Spider e strumenti per tenere sotto controllo il sito:
+1. Visual SEO Studio: http://visual-seo.com/
+E' un software freeware e davvero potente!
+2. XENU: http://home.snafu.de/tilman/xenulink.html
+Trova i link 404 e controlla i link interni errati del vostro sito.
+
+
+Strategie avanzate:
+1. Inserire testi descrittivi per ogni categoria del sito (prima [200 parole] o dopo [600 parole] del vostro normale contenuto della navigazione) [le pagine di categoria per siti B2C e B2B convertono molto meglio]
+2. Creare delle landing-page ottimizzate apposta per spingere certe keyword [pagine prive del template classico del sito così da non perdere rank]
+3. Creare una serie di pagine informative sui vostri prodotti / servizi interne al sito che si linkano tra di loro, ricche di testo [minimo 600 parole] con i tag principali tutti ottimizzati per una certa keyword.
+4. Utilizzare molto i social: Facebook + Google regnano, è importante ottenere molti "share", i Social Media Manager migliori inducono la condivisione postando "cavolate divertenti".
+5. Backlink puliti: Chiedete ai collaboratori di creare un post nel loro sito che linka al vostro [correlato da testo e keywords sensate] o chiedete / pagate un banner in tutte le pagine del loro sito [specie per metterlo nella loro homepage].
+6. Backlink sporchi: Cercate su google siti che trattano il vostro settore di interesse e postate commenti con dei backlink al vostro sito.
+Potete inoltre scaricare il mio file con tutte le webdirectories / siti di artcle marketing per postare backlink [Attenzione!  E' una lista generica, puntate SOLO ai backlink di qualità!]
+
+Monitorate l'attività dei vostri competitors:
+1. Monitorate i backlink off-site con questo tool: http://www.backlinkwatch.com/index.php [Riporta fino a 1000 backlink]
+
+Estensioni per Chrome:
+1. PageRank Status: https://chrome.google.com/webstore/detail/pagerank-status/hbdkkfheckcdppiaiabobmennhijkknn?hl=it
+E' sempre importante conosce il rank di altri siti per capire quanto "rank" passano ai link off-site / backlink e relativa affluenza
+2. Meta SEO Inspector: https://chrome.google.com/webstore/detail/meta-seo-inspector/ibkclpciafdglkjkcibmohobjkcfkaef
+Da una veloce panoramica dei tag di base e suggerisce cosa non va bene. Inoltre su Windows fa un hilight di tutti i link "nofollow"
+3. Wappalyzer: https://chrome.google.com/webstore/detail/wappalyzer/gppongmhjkpfnbhagpmjfkannfbllamg
+Molto apprezzato dai developer, mostra in real time tutti i plugin / CMS / tipo di server che utilizza il sito che si sta guardando.
+
+Ottimizzazione avanzata per developer:
+1. Velocità: E' un fattore estremamente importante, usate un buon server vicino alla vostra località, DNS veloci e trovate un plugin per gestire le pagine del sito in cache (vedi mio articolo + varnish cache: https://www.varnish-cache.org/), una buona velocità del sito deve stare sotto i 800-600ms.
+
+Tenersi aggiornati sugli aggiornamenti in campo SEO e chiedere consigli:
+1. Blog: http://blog.tagliaerbe.com/
+2. Webinar: http://www.gtmasterclub.it/eventi/2014
+3. Consigli: http://www.giorgiotave.it/forum/
+
+Per crescere nelle SERP il segreto è: Ottimizzare tutto e ... continuare ad aggiornare il sito xD
+>>>>>>> 88db751ac5be5ce3016f51cbf7c0a58209082adb
