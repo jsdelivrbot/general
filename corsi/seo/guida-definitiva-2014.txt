@@ -35,6 +35,7 @@ Strumenti per trovare nuove keywords:
 2. Se il sito è nuovo o è ancora poco ottimizzato è meglio cercare keyword che puntano sulla coda lunga (3-4-5 parole consecutive).
 Esempio sbagliato: "box doccia"
 Esempio corretto: "Vendita online box doccia"
+3. Essendo che lavorare sulle keyword della coda lunga porta più risultati ma sono più difficili da trovare su adword ketwordplanner consiglio di cercarle i termini correlati alla keyword in questione a fondo delle pagine di ricerca di google, sotto la voce: "Ricerche correlate a ..." (controllate poi quali hanno una migliore ricerca mensile).
 3. Utilizzare un foglio di calcolo come questo per selezionare e ricordare le keyword strategiche: https://docs.google.com/spreadsheets/d/1tERkq2ijPfsaq2PUHP1ksC-eFELT5qPSygWTaR3HkNI/edit?usp=sharing
 4. Se il sito ha poco rank o la categoria che si sta "rankando" non è strettamente inerente a ciò che tratta il sito conviene puntare su una keyword-difficulty molto bassa altrimenti le pagine ottimizzate non si posizioneranno mai.
 Eseguire il check della keyword difficulty creando un account (anche free) su SEO MOZ e usare: https://moz.com/researchtools/keyword-difficulty
