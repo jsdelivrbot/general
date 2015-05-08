@@ -1,0 +1,11 @@
+La strategia nella creazione di modelli (patterns) comprende un vasto ambiente e diverse strategie nell'utilizzo della programmazione OOP.
+
+La conoscenza di tali tecniche serve a:
+- Prevenire problemi tipici durante l'implementazione del codice
+- Creare codice riutilizzabile in altri progetti
+- Prevenire problemi di dipendenze
+- La conoscenza teorica è basilare per la comunicazione tra informatici
+
+## Abstract Factory
+Scopo: Interfaccia che definisce le gerarchie e le dipendenze di altri oggetti
+
