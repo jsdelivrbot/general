@@ -1,0 +1,12 @@
+## Best Plugins ##
+
+https://atom.io/packages/emmet
+https://atom.io/packages/open-recent
+https://atom.io/packages/minimap
+https://atom.io/packages/highlight-selected
+https://atom.io/packages/linter
+https://atom.io/packages/linter-jshint
+
+## SETTING ##
+
+Show invisibles
